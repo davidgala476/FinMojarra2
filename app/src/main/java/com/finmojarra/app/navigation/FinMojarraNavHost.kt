@@ -20,6 +20,8 @@ import com.finmojarra.app.ui.auth.RecoverScreen
 import com.finmojarra.app.ui.auth.RecoverViewModel
 import com.finmojarra.app.ui.auth.RegisterScreen
 import com.finmojarra.app.ui.auth.RegisterViewModel
+import com.finmojarra.app.ui.goals.CreateGoalScreen
+import com.finmojarra.app.ui.goals.CreateGoalViewModel
 import com.finmojarra.app.ui.goals.GoalsScreen
 import com.finmojarra.app.ui.goals.GoalsViewModel
 import com.finmojarra.app.ui.home.HomeScreen
@@ -40,6 +42,7 @@ object Routes {
     const val RECUPERAR = "recuperar"
     const val HOME = "home"
     const val METAS = "metas"
+    const val METAS_NUEVA = "metas/nueva"
     const val PERFIL = "perfil"
     const val PERFIL_FOTO = "perfil/foto"
     const val PERFIL_DEMOGRAFICA = "perfil/demografica"
@@ -155,7 +158,21 @@ fun FinMojarraNavHost(
             )
             GoalsScreen(
                 viewModel = viewModel,
-                onBack = { navController.popBackStack() }
+                onBack = { navController.popBackStack() },
+                onCreateGoal = { navController.navigate(Routes.METAS_NUEVA) }
+            )
+        }
+
+        composable(Routes.METAS_NUEVA) {
+            val viewModel: CreateGoalViewModel = viewModel(
+                factory = viewModelFactory {
+                    initializer { CreateGoalViewModel(container.goalsRepository) }
+                }
+            )
+            CreateGoalScreen(
+                viewModel = viewModel,
+                onBack = { navController.popBackStack() },
+                onCreated = { navController.popBackStack() }
             )
         }
 
