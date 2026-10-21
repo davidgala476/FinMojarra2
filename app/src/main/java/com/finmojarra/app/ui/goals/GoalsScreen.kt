@@ -58,11 +58,12 @@ private fun formatDate(millis: Long): String =
     SimpleDateFormat("d MMM yyyy", colombia).apply { timeZone = TimeZone.getTimeZone("UTC") }
         .format(Date(millis))
 
-/** Parte 1 de Metas: lista de solo lectura (sin crear ni editar). */
+/** Metas: lista con progreso y botón para crear una nueva (editar y mover dinero: parte 3). */
 @Composable
 fun GoalsScreen(
     viewModel: GoalsViewModel,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    onCreateGoal: () -> Unit
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -87,6 +88,7 @@ fun GoalsScreen(
                 modifier = Modifier.padding(start = 4.dp, bottom = 16.dp)
             )
 
+            Box(modifier = Modifier.weight(1f)) {
             when {
                 state.isLoading -> CenteredBox {
                     CircularProgressIndicator(color = FinTeal)
@@ -125,6 +127,15 @@ fun GoalsScreen(
                     item { Spacer(modifier = Modifier.height(16.dp)) }
                 }
             }
+            }
+
+            if (!state.isLoading && !state.hasError) {
+                FinPrimaryButton(
+                    text = stringResource(R.string.goals_create_button),
+                    onClick = onCreateGoal,
+                    modifier = Modifier.padding(vertical = 16.dp)
+                )
+            }
         }
 
         IconButton(
@@ -149,8 +160,7 @@ fun GoalsScreen(
 private fun CenteredBox(content: @Composable () -> Unit) {
     Box(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(bottom = 72.dp),
+            .fillMaxSize(),
         contentAlignment = Alignment.Center
     ) { content() }
 }
