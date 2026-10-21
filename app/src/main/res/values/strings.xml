@@ -234,4 +234,8 @@
     <string name="goals_msg_deposit_exceeds">El valor supera lo que falta para cumplir tu meta (%1$s). Cambia el valor.</string>
     <string name="goals_msg_withdraw_exceeds">No puedes retirar %1$s porque solo tienes %2$s ahorrados. Cambia el valor.</string>
     <string name="goals_msg_nothing_saved">No tienes dinero ahorrado en esta meta para retirar.</string>
+    <string name="goals_delete_button">Eliminar meta</string>
+    <string name="goals_delete_action">Eliminar</string>
+    <string name="goals_delete_confirm">¿Seguro que quieres eliminar esta meta? No se puede deshacer.</string>
+    <string name="goals_delete_confirm_saved">Tienes %1$s ahorrados en esta meta. ¿Seguro que quieres eliminarla? No se puede deshacer.</string>
 </resources>
