@@ -120,3 +120,12 @@ service cloud.firestore {
 ```
 3. Los datos se ven en **Firestore Database ▸ Datos ▸ users ▸ (UID del usuario)**.
    Si las reglas no están publicadas, Logcat (filtro `FinMojarra`) muestra `PERMISSION_DENIED`.
+
+## Metas — Parte 1 (solo lectura)
+- Inicio: botón "Mis metas" → `Routes.METAS` → `GoalsScreen` (lista con progreso, sin crear ni editar).
+- Datos: Firestore `users/{uid}/goals/{goalId}` con `name`, `targetAmount`, `savedAmount`, `deadline?`, `createdAt?`.
+- Código: `data/goals/*`, `ui/goals/*`.
+
+## Metas — Parte 2 (crear)
+- En la lista de metas, el botón "Crear meta" abre `CreateGoalScreen` (`Routes.METAS_NUEVA`): nombre, monto y fecha límite opcional.
+- Se guarda en `users/{uid}/goals` con `savedAmount = 0`. Código: `CreateGoalViewModel`, `GoalsRepository.createGoal`.
