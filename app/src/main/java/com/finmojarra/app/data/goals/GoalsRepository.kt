@@ -21,4 +21,7 @@ interface GoalsRepository {
 
     /** Suma [delta] al ahorro de la meta (negativo para retirar). */
     suspend fun addToSaved(goalId: String, delta: Double): GoalWriteResult
+
+    /** Borra la meta (y su imagen) de Firestore. */
+    suspend fun deleteGoal(goalId: String): GoalWriteResult
 }

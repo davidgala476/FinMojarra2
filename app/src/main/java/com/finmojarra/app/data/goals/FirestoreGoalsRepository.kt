@@ -103,6 +103,14 @@ class FirestoreGoalsRepository(
         return write { ref.update("savedAmount", FieldValue.increment(delta)).awaitResult() }
     }
 
+    override suspend fun deleteGoal(goalId: String): GoalWriteResult {
+        val uid = auth.currentUser?.uid
+            ?: return GoalWriteResult.Failure(GoalWriteResult.Reason.NoSession)
+        val ref = goalsCollection(uid).document(goalId)
+        // La imagen vive dentro del mismo documento, así que se borra junto con la meta.
+        return write { ref.delete().awaitResult() }
+    }
+
     /**
      * Sin internet Firestore nunca responde: tras el tiempo de espera se da por buena, porque
      * el cambio queda en cola y se sube solo al volver la conexión. Los errores reales

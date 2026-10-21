@@ -1,5 +1,6 @@
 package com.finmojarra.app.ui.goals
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -22,8 +23,10 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -57,10 +60,15 @@ fun GoalDetailScreen(
     photoStamp: Long,
     onBack: () -> Unit,
     onOpenProfile: () -> Unit,
+    onDeleted: () -> Unit,
     onLearnToSave: () -> Unit = {}
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val goal = state.goal
+
+    LaunchedEffect(state.deleted) {
+        if (state.deleted) onDeleted()
+    }
 
     GoalsScaffold(
         onBack = onBack,
@@ -101,6 +109,7 @@ fun GoalDetailScreen(
                 goal = goal,
                 number = state.number,
                 onMoveMoney = viewModel::openDialog,
+                onDelete = viewModel::askDelete,
                 onLearnToSave = onLearnToSave,
                 modifier = Modifier.weight(1f)
             )
@@ -143,6 +152,31 @@ fun GoalDetailScreen(
         }
     }
 
+    if (state.confirmDelete && goal != null) {
+        FinDialog(
+            title = if (goal.savedAmount > 0.0) {
+                stringResource(R.string.goals_delete_confirm_saved, formatMoney(goal.savedAmount))
+            } else {
+                stringResource(R.string.goals_delete_confirm)
+            },
+            onDismiss = viewModel::cancelDelete
+        ) {
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                DialogActionButton(
+                    text = stringResource(R.string.goals_delete_action),
+                    onClick = viewModel::confirmDelete,
+                    contentColor = FinError,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                DialogActionButton(
+                    text = stringResource(R.string.action_cancel),
+                    onClick = viewModel::cancelDelete,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+        }
+    }
+
     state.message?.let { message ->
         FinDialog(
             title = stringResource(message.res, *message.args.toTypedArray()),
@@ -162,6 +196,7 @@ private fun GoalDetailContent(
     goal: Goal,
     number: Int,
     onMoveMoney: () -> Unit,
+    onDelete: () -> Unit,
     onLearnToSave: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -235,6 +270,22 @@ private fun GoalDetailContent(
             ) {
                 SmallTealButton(stringResource(R.string.goals_deposit_button), onMoveMoney)
                 SmallTealButton(stringResource(R.string.goals_withdraw_button), onMoveMoney)
+            }
+
+            Spacer(modifier = Modifier.height(10.dp))
+            OutlinedButton(
+                onClick = onDelete,
+                shape = RoundedCornerShape(8.dp),
+                border = BorderStroke(1.dp, FinError),
+                colors = ButtonDefaults.outlinedButtonColors(contentColor = FinError),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(36.dp)
+            ) {
+                Text(
+                    text = stringResource(R.string.goals_delete_button),
+                    style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Medium)
+                )
             }
 
             if (goal.isCompleted) {
