@@ -1,0 +1,177 @@
+<resources>
+    <string name="app_name">FinMojarra</string>
+    <string name="logo_description">Logo de FinMojarra</string>
+
+    <!-- Acciones generales -->
+    <string name="action_back">Volver</string>
+    <string name="action_retry">Reintentar</string>
+    <string name="action_register">Registrarse</string>
+    <string name="action_exit">Salir</string>
+    <string name="action_accept">Aceptar</string>
+    <string name="action_cancel">Cancelar</string>
+    <string name="action_logout">Cerrar sesión</string>
+    <string name="action_show_password">Mostrar contraseña</string>
+    <string name="action_hide_password">Ocultar contraseña</string>
+    <string name="loading">Cargando...</string>
+
+    <!-- Inicio App -->
+    <string name="inicio_title">Crea una cuenta</string>
+    <string name="inicio_subtitle">Ingresa tu correo electrónico\npara registrarte en esta aplicación</string>
+    <string name="inicio_email_placeholder">correoelectrónico@dominio.com</string>
+    <string name="inicio_register">Regístrate</string>
+    <string name="inicio_login">Iniciar Sesión</string>
+    <string name="inicio_or">o</string>
+    <string name="inicio_google">Continuar con Google</string>
+    <!-- Las comillas conservan el espacio final/inicial, que Android recortaría. -->
+    <string name="inicio_terms_prefix">"Al hacer clic en continuar, aceptas nuestros "</string>
+    <string name="inicio_terms_service">Términos de servicio</string>
+    <string name="inicio_terms_and">" y "</string>
+    <string name="inicio_terms_privacy">Política de privacidad</string>
+
+    <!-- Login -->
+    <string name="login_identifier_label">Usuario o Correo</string>
+    <string name="login_identifier_placeholder">Introducir usuario o correo electrónico</string>
+    <string name="login_password_label">Contraseña</string>
+    <string name="login_password_placeholder">Introducir contraseña</string>
+    <string name="login_forgot_identifier">¿Olvidaste tu usuario o correo?</string>
+    <string name="login_forgot_password">¿Olvidaste tu contraseña?</string>
+    <string name="login_button">Iniciar Sesión</string>
+    <string name="login_no_account">¿Todavía no tienes una cuenta?</string>
+
+    <!-- Registro -->
+    <string name="register_title">Crear una cuenta</string>
+    <string name="register_name_label">Nombre Completo</string>
+    <string name="register_name_placeholder">Inserte nombre y apellido</string>
+    <string name="register_email_label">Correo Electrónico</string>
+    <string name="register_email_placeholder">Inserte correo electrónico</string>
+    <string name="register_phone_label">Teléfono</string>
+    <string name="register_phone_placeholder">Inserte teléfono</string>
+    <string name="register_password_label">Contraseña</string>
+    <string name="register_password_placeholder">Inserte contraseña</string>
+    <string name="register_confirm_label">Confirmar contraseña</string>
+    <string name="register_confirm_placeholder">Confirme su contraseña</string>
+    <string name="register_button">Registrarse</string>
+
+    <!-- Recuperar contraseña -->
+    <string name="recover_password_title">Recuperar contraseña</string>
+    <string name="recover_password_placeholder">Introducir correo electrónico</string>
+    <string name="recover_password_button">Recuperar contraseña</string>
+    <string name="recover_password_sent">Si el correo está registrado, te enviaremos las instrucciones para restablecer tu contraseña.</string>
+
+    <!-- Validaciones de campos -->
+    <string name="error_field_required">Este campo es obligatorio</string>
+    <string name="error_email_invalid">Correo electrónico inválido</string>
+    <string name="error_phone_invalid">Teléfono inválido</string>
+    <string name="error_password_short">La contraseña debe tener al menos 8 caracteres</string>
+    <string name="error_password_mismatch">Las contraseñas no coinciden</string>
+    <string name="error_email_taken">Este correo ya está registrado</string>
+
+    <!-- Diálogos de error -->
+    <string name="error_invalid_credentials">Usuario o contraseña incorrecta</string>
+    <string name="error_too_many_attempts">Demasiados intentos incorrectos, reintente en 5 minutos</string>
+    <string name="error_no_connection">No se pudo verificar el usuario/contraseña, revisa tu conexión a internet.</string>
+    <string name="error_server_title">Error conectando con el servidor</string>
+    <string name="error_server_body">“No eres tú” somos nosotros, prueba más tarde</string>
+
+    <string name="error_no_connection_generic">Sin conexión. Revisa tu internet e inténtalo de nuevo.</string>
+
+    <!-- Home -->
+    <string name="home_profile_description">Perfil de usuario</string>
+
+    <!-- Perfil -->
+    <string name="profile_section_data">Mis datos</string>
+    <string name="profile_section_security">Seguridad</string>
+    <string name="profile_save">Guardar cambios</string>
+    <string name="profile_change_password">Cambiar contraseña</string>
+    <string name="profile_send_reset">Enviarme un correo para restablecer mi contraseña</string>
+    <string name="profile_google_account">Tu cuenta usa Google: la contraseña se gestiona desde tu cuenta de Google.</string>
+    <string name="profile_current_password">Contraseña actual</string>
+    <string name="profile_new_password">Contraseña nueva</string>
+    <string name="profile_update_password">Actualizar contraseña</string>
+    <string name="profile_logout_confirm">¿Quieres cerrar sesión?</string>
+    <string name="profile_delete_account">Eliminar cuenta</string>
+    <string name="profile_delete_confirm">¿Eliminar tu cuenta?</string>
+    <string name="profile_delete_warning">Esta acción es permanente y no se puede deshacer.</string>
+    <string name="profile_msg_name_saved">Nombre actualizado</string>
+    <string name="profile_msg_password_changed">Contraseña actualizada</string>
+    <string name="profile_msg_reset_sent">Te enviamos un correo con las instrucciones para restablecer tu contraseña.</string>
+    <string name="profile_err_wrong_password">La contraseña actual no es correcta</string>
+    <string name="profile_err_weak_password">La contraseña nueva es muy débil, usa una más segura</string>
+    <string name="profile_err_recent_login">Por seguridad, cierra sesión, vuelve a ingresar e inténtalo de nuevo</string>
+    <string name="profile_err_no_session">No hay una sesión activa. Inicia sesión de nuevo</string>
+
+    <!-- Perfil: pantalla principal -->
+    <string name="profile_photo_description">Foto de perfil</string>
+    <string name="profile_edit_photo">Editar foto</string>
+    <string name="profile_card_you">TÚ</string>
+    <string name="profile_card_demographics">Info demográfica</string>
+    <string name="profile_card_phone">Número Celular</string>
+    <string name="profile_card_email">Correo electrónico</string>
+    <string name="profile_card_address">Dirección</string>
+    <string name="profile_card_document">Núm. Documento</string>
+    <string name="profile_not_set">Sin registrar</string>
+
+    <!-- Perfil: pantallas de cambio -->
+    <string name="action_confirm">Confirmar</string>
+    <string name="change_data_caption">Cambiar datos</string>
+    <string name="profile_msg_saved">Datos actualizados</string>
+    <string name="profile_msg_nothing">No hay cambios para guardar</string>
+
+    <!-- Editar foto -->
+    <string name="profile_edit_photo_title">Editar la foto de perfil</string>
+    <string name="photo_take">Tomar foto</string>
+    <string name="photo_take_sub">Activar cámara</string>
+    <string name="photo_pick">Seleccionar</string>
+    <string name="photo_pick_sub">Buscar en archivos y galería</string>
+    <string name="photo_delete">Eliminar foto</string>
+    <string name="photo_delete_sub">Quitar foto de perfil</string>
+    <string name="profile_msg_photo_saved">Foto actualizada</string>
+    <string name="profile_msg_photo_removed">Foto eliminada</string>
+    <string name="profile_msg_no_photo">Aún no tienes foto de perfil</string>
+    <string name="profile_err_photo">No se pudo guardar la foto. Inténtalo de nuevo.</string>
+    <string name="profile_err_camera">No se pudo abrir la cámara en este dispositivo</string>
+
+    <!-- Info demográfica -->
+    <string name="demo_title">Tu información</string>
+    <string name="demo_age">Edad</string>
+    <string name="demo_age_hint">Introduce tu edad</string>
+    <string name="demo_gender">Género</string>
+    <string name="demo_gender_hint">Introduce tu género</string>
+    <string name="demo_occupation">Ocupación</string>
+    <string name="demo_occupation_hint">¿Qué haces?</string>
+    <string name="demo_education">Nivel educativo</string>
+    <string name="demo_education_hint">Introduce tu nivel educativo</string>
+    <string name="error_age_invalid">Edad inválida</string>
+
+    <!-- Número celular -->
+    <string name="phone_title">Número celular</string>
+    <string name="phone_current">Número celular</string>
+    <string name="phone_new">Cambiar número</string>
+    <string name="phone_confirm_new">Confirmar nuevo número</string>
+    <string name="phone_new_hint">Introduce tu nuevo número</string>
+    <string name="error_phone_mismatch">Los números no coinciden</string>
+
+    <!-- Dirección -->
+    <string name="address_title">Dirección</string>
+    <string name="address_current">Dirección</string>
+    <string name="address_country">País</string>
+    <string name="address_country_hint">Introduce tu país</string>
+    <string name="address_department">Departamento</string>
+    <string name="address_department_hint">Introduce tu departamento</string>
+    <string name="address_city">Ciudad</string>
+    <string name="address_city_hint">Introduce tu ciudad</string>
+    <string name="address_via_type">Dirección</string>
+    <string name="address_via_type_hint">Tipo de vía</string>
+    <string name="address_via">Vía</string>
+    <string name="address_via_hint">30 sur</string>
+    <string name="address_plate">Placa</string>
+    <string name="address_plate_hint">80 - 80</string>
+
+    <!-- Número de documento -->
+    <string name="document_title">Número de documento</string>
+    <string name="document_current">Número de documento</string>
+    <string name="document_type">Tipo de documento</string>
+    <string name="document_type_hint">Introduce el tipo de documento</string>
+    <string name="document_number">Número del documento</string>
+    <string name="document_number_hint">Introduce tu número de documento</string>
+</resources>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Tema del sistema (antes de que Compose pinte). Compose controla toda la UI. -->
+    <style name="Theme.FinMojarra" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/fin_background</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+    </style>
+</resources>

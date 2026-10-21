@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "115936114628",
+    "project_id": "fin-mojarra-75d0c",
+    "storage_bucket": "fin-mojarra-75d0c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:115936114628:android:7491a0a2de00467fe39691",
+        "android_client_info": {
+          "package_name": "com.finmojarra.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "115936114628-jpl1dgelt738q9g2qak9scb3gbcc9b7n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCf-d9geUyUzUQws1_Fluh0ELLHlvDI7Is"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "115936114628-jpl1dgelt738q9g2qak9scb3gbcc9b7n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
