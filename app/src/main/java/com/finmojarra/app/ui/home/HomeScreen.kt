@@ -18,22 +18,34 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.finmojarra.app.R
 import com.finmojarra.app.ui.components.CloudDecoration
+import com.finmojarra.app.ui.components.FinPrimaryButton
 import com.finmojarra.app.ui.theme.FinBackground
 import com.finmojarra.app.ui.theme.FinTeal
 import com.finmojarra.app.ui.theme.FinWhite
 
 /**
- * Pantalla de inicio tras iniciar sesión: por ahora solo muestra el icono del perfil,
- * que abre la pantalla de perfil de usuario.
+ * Pantalla de inicio tras iniciar sesión: icono del perfil (arriba a la derecha) y
+ * botón para entrar a las metas.
  */
 @Composable
-fun HomeScreen(onOpenProfile: () -> Unit) {
+fun HomeScreen(
+    onOpenProfile: () -> Unit,
+    onOpenGoals: () -> Unit
+) {
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(FinBackground)
     ) {
         CloudDecoration(modifier = Modifier.fillMaxSize())
+
+        FinPrimaryButton(
+            text = stringResource(R.string.home_goals),
+            onClick = onOpenGoals,
+            modifier = Modifier
+                .align(Alignment.Center)
+                .padding(horizontal = 40.dp)
+        )
 
         IconButton(
             onClick = onOpenProfile,
