@@ -143,8 +143,11 @@ fun GoalDetailScreen(
         }
     }
 
-    state.message?.let { messageRes ->
-        FinDialog(title = stringResource(messageRes), onDismiss = viewModel::dismissMessage) {
+    state.message?.let { message ->
+        FinDialog(
+            title = stringResource(message.res, *message.args.toTypedArray()),
+            onDismiss = viewModel::dismissMessage
+        ) {
             DialogActionButton(
                 text = stringResource(R.string.action_accept),
                 onClick = viewModel::dismissMessage,

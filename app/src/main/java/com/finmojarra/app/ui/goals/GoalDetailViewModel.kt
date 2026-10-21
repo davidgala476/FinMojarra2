@@ -14,6 +14,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+/** Texto de un diálogo emergente: recurso y, si lo necesita, sus argumentos (montos). */
+data class GoalMessage(@StringRes val res: Int, val args: List<Any> = emptyList())
+
 data class GoalDetailUiState(
     val isLoading: Boolean = true,
     val hasError: Boolean = false,
@@ -25,7 +28,7 @@ data class GoalDetailUiState(
     val amount: String = "",
     @StringRes val amountError: Int? = null,
     val isWorking: Boolean = false,
-    @StringRes val message: Int? = null
+    val message: GoalMessage? = null
 )
 
 /** Detalle de una meta e ingreso / retiro de dinero. */
@@ -84,15 +87,40 @@ class GoalDetailViewModel(
         val goal = s.goal ?: return
         if (s.isWorking) return
 
+        // Casos que se avisan con una ventana emergente (el diálogo de valor queda abierto).
+        if (sign > 0 && goal.isCompleted) {
+            showMessage(GoalMessage(R.string.goals_msg_completed))
+            return
+        }
+        if (sign < 0 && goal.savedAmount <= 0.0) {
+            showMessage(GoalMessage(R.string.goals_msg_nothing_saved))
+            return
+        }
+
         val value = s.amount.toLongOrNull() ?: 0L
-        val error = when {
+        val inlineError = when {
             s.amount.isBlank() -> R.string.error_field_required
             value <= 0L -> R.string.goals_error_amount
-            sign < 0 && value > goal.savedAmount -> R.string.goals_error_withdraw
             else -> null
         }
-        if (error != null) {
-            _uiState.update { it.copy(amountError = error) }
+        if (inlineError != null) {
+            _uiState.update { it.copy(amountError = inlineError) }
+            return
+        }
+
+        if (sign > 0 && value > goal.remainingAmount) {
+            showMessage(
+                GoalMessage(R.string.goals_msg_deposit_exceeds, listOf(formatMoney(goal.remainingAmount)))
+            )
+            return
+        }
+        if (sign < 0 && value > goal.savedAmount) {
+            showMessage(
+                GoalMessage(
+                    R.string.goals_msg_withdraw_exceeds,
+                    listOf(formatMoney(value.toDouble()), formatMoney(goal.savedAmount))
+                )
+            )
             return
         }
 
@@ -104,10 +132,14 @@ class GoalDetailViewModel(
                     GoalWriteResult.Success ->
                         it.copy(isWorking = false, dialogOpen = false, amount = "")
                     is GoalWriteResult.Failure ->
-                        it.copy(isWorking = false, message = result.reason.messageRes())
+                        it.copy(isWorking = false, message = GoalMessage(result.reason.messageRes()))
                 }
             }
         }
+    }
+
+    private fun showMessage(message: GoalMessage) {
+        _uiState.update { it.copy(message = message) }
     }
 
     private companion object {
