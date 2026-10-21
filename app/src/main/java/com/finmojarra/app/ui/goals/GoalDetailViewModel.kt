@@ -28,6 +28,10 @@ data class GoalDetailUiState(
     val amount: String = "",
     @StringRes val amountError: Int? = null,
     val isWorking: Boolean = false,
+    /** Muestra la confirmación "¿Eliminar esta meta?". */
+    val confirmDelete: Boolean = false,
+    /** La meta ya se borró: la pantalla debe cerrarse. */
+    val deleted: Boolean = false,
     val message: GoalMessage? = null
 )
 
@@ -76,6 +80,32 @@ class GoalDetailViewModel(
 
     fun dismissMessage() {
         _uiState.update { it.copy(message = null) }
+    }
+
+    fun askDelete() {
+        _uiState.update { it.copy(confirmDelete = true, dialogOpen = false) }
+    }
+
+    fun cancelDelete() {
+        _uiState.update { it.copy(confirmDelete = false) }
+    }
+
+    fun confirmDelete() {
+        val s = _uiState.value
+        if (s.isWorking || s.goal == null) return
+        // isWorking tapa la pantalla con la carga mientras se borra, para que no se vea
+        // "meta no encontrada" cuando Firestore quita la meta de la lista local.
+        _uiState.update { it.copy(confirmDelete = false, isWorking = true) }
+        viewModelScope.launch {
+            val result = repository.deleteGoal(goalId)
+            _uiState.update {
+                when (result) {
+                    GoalWriteResult.Success -> it.copy(isWorking = false, deleted = true)
+                    is GoalWriteResult.Failure ->
+                        it.copy(isWorking = false, message = GoalMessage(result.reason.messageRes()))
+                }
+            }
+        }
     }
 
     fun deposit() = move(+1)
