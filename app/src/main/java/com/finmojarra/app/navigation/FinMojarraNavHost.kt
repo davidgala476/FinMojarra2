@@ -190,7 +190,8 @@ fun FinMojarraNavHost(
                 photoPath = details.photoPath,
                 photoStamp = details.photoStamp,
                 onBack = { navController.popBackStack() },
-                onOpenProfile = { navController.navigate(Routes.PERFIL) }
+                onOpenProfile = { navController.navigate(Routes.PERFIL) },
+                onDeleted = { navController.popBackStack() }
             )
         }
 
