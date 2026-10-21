@@ -2,6 +2,8 @@ package com.finmojarra.app.navigation
 
 import android.net.Uri
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
@@ -22,6 +24,8 @@ import com.finmojarra.app.ui.auth.RegisterScreen
 import com.finmojarra.app.ui.auth.RegisterViewModel
 import com.finmojarra.app.ui.goals.CreateGoalScreen
 import com.finmojarra.app.ui.goals.CreateGoalViewModel
+import com.finmojarra.app.ui.goals.GoalDetailScreen
+import com.finmojarra.app.ui.goals.GoalDetailViewModel
 import com.finmojarra.app.ui.goals.GoalsScreen
 import com.finmojarra.app.ui.goals.GoalsViewModel
 import com.finmojarra.app.ui.home.HomeScreen
@@ -43,6 +47,8 @@ object Routes {
     const val HOME = "home"
     const val METAS = "metas"
     const val METAS_NUEVA = "metas/nueva"
+    const val METAS_DETALLE = "meta"
+    const val METAS_DETALLE_PATTERN = "meta/{goalId}"
     const val PERFIL = "perfil"
     const val PERFIL_FOTO = "perfil/foto"
     const val PERFIL_DEMOGRAFICA = "perfil/demografica"
@@ -156,10 +162,35 @@ fun FinMojarraNavHost(
                     initializer { GoalsViewModel(container.goalsRepository) }
                 }
             )
+            val details by container.profileDetailsRepository.details.collectAsStateWithLifecycle()
             GoalsScreen(
                 viewModel = viewModel,
+                photoPath = details.photoPath,
+                photoStamp = details.photoStamp,
                 onBack = { navController.popBackStack() },
+                onOpenProfile = { navController.navigate(Routes.PERFIL) },
+                onOpenGoal = { id -> navController.navigate("${Routes.METAS_DETALLE}/$id") },
                 onCreateGoal = { navController.navigate(Routes.METAS_NUEVA) }
+            )
+        }
+
+        composable(
+            route = Routes.METAS_DETALLE_PATTERN,
+            arguments = listOf(navArgument("goalId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val goalId = backStackEntry.arguments?.getString("goalId").orEmpty()
+            val viewModel: GoalDetailViewModel = viewModel(
+                factory = viewModelFactory {
+                    initializer { GoalDetailViewModel(container.goalsRepository, goalId) }
+                }
+            )
+            val details by container.profileDetailsRepository.details.collectAsStateWithLifecycle()
+            GoalDetailScreen(
+                viewModel = viewModel,
+                photoPath = details.photoPath,
+                photoStamp = details.photoStamp,
+                onBack = { navController.popBackStack() },
+                onOpenProfile = { navController.navigate(Routes.PERFIL) }
             )
         }
 
@@ -169,9 +200,13 @@ fun FinMojarraNavHost(
                     initializer { CreateGoalViewModel(container.goalsRepository) }
                 }
             )
+            val details by container.profileDetailsRepository.details.collectAsStateWithLifecycle()
             CreateGoalScreen(
                 viewModel = viewModel,
+                photoPath = details.photoPath,
+                photoStamp = details.photoStamp,
                 onBack = { navController.popBackStack() },
+                onOpenProfile = { navController.navigate(Routes.PERFIL) },
                 onCreated = { navController.popBackStack() }
             )
         }
