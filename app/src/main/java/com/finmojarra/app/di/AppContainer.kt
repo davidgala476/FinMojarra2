@@ -26,5 +26,5 @@ class AppContainer(context: Context) {
     val googleTokenProvider = GoogleTokenProvider()
     val profileRepository: ProfileRepository = FirebaseProfileRepository()
     val profileDetailsRepository: ProfileDetailsRepository = FirestoreProfileDetailsRepository(context)
-    val goalsRepository: GoalsRepository = FirestoreGoalsRepository()
+    val goalsRepository: GoalsRepository = FirestoreGoalsRepository(context)
 }
