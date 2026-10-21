@@ -230,4 +230,8 @@
     <string name="goals_created">Meta creada</string>
     <string name="goals_incomplete">Completa todos los datos para crear tu meta</string>
     <string name="goals_err_image">No se pudo procesar la imagen. Prueba con otra.</string>
+    <string name="goals_msg_completed">¡Esta meta ya fue cumplida! Ya no puedes ingresar más dinero.</string>
+    <string name="goals_msg_deposit_exceeds">El valor supera lo que falta para cumplir tu meta (%1$s). Cambia el valor.</string>
+    <string name="goals_msg_withdraw_exceeds">No puedes retirar %1$s porque solo tienes %2$s ahorrados. Cambia el valor.</string>
+    <string name="goals_msg_nothing_saved">No tienes dinero ahorrado en esta meta para retirar.</string>
 </resources>
