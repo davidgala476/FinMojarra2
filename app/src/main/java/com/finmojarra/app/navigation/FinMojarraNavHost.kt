@@ -20,6 +20,8 @@ import com.finmojarra.app.ui.auth.RecoverScreen
 import com.finmojarra.app.ui.auth.RecoverViewModel
 import com.finmojarra.app.ui.auth.RegisterScreen
 import com.finmojarra.app.ui.auth.RegisterViewModel
+import com.finmojarra.app.ui.goals.GoalsScreen
+import com.finmojarra.app.ui.goals.GoalsViewModel
 import com.finmojarra.app.ui.home.HomeScreen
 import com.finmojarra.app.ui.profile.AddressScreen
 import com.finmojarra.app.ui.profile.DemographicsScreen
@@ -37,6 +39,7 @@ object Routes {
     const val REGISTRO_PATTERN = "registro?email={email}"
     const val RECUPERAR = "recuperar"
     const val HOME = "home"
+    const val METAS = "metas"
     const val PERFIL = "perfil"
     const val PERFIL_FOTO = "perfil/foto"
     const val PERFIL_DEMOGRAFICA = "perfil/demografica"
@@ -138,7 +141,22 @@ fun FinMojarraNavHost(
         }
 
         composable(Routes.HOME) {
-            HomeScreen(onOpenProfile = { navController.navigate(Routes.PERFIL) })
+            HomeScreen(
+                onOpenProfile = { navController.navigate(Routes.PERFIL) },
+                onOpenGoals = { navController.navigate(Routes.METAS) }
+            )
+        }
+
+        composable(Routes.METAS) {
+            val viewModel: GoalsViewModel = viewModel(
+                factory = viewModelFactory {
+                    initializer { GoalsViewModel(container.goalsRepository) }
+                }
+            )
+            GoalsScreen(
+                viewModel = viewModel,
+                onBack = { navController.popBackStack() }
+            )
         }
 
         composable(Routes.PERFIL) {

@@ -5,6 +5,8 @@ import com.finmojarra.app.data.auth.AuthRepository
 import com.finmojarra.app.data.auth.FirebaseAuthRepository
 import com.finmojarra.app.data.auth.GoogleTokenProvider
 import com.finmojarra.app.data.auth.SessionHolder
+import com.finmojarra.app.data.goals.FirestoreGoalsRepository
+import com.finmojarra.app.data.goals.GoalsRepository
 import com.finmojarra.app.data.profile.FirebaseProfileRepository
 import com.finmojarra.app.data.profile.FirestoreProfileDetailsRepository
 import com.finmojarra.app.data.profile.ProfileDetailsRepository
@@ -24,4 +26,5 @@ class AppContainer(context: Context) {
     val googleTokenProvider = GoogleTokenProvider()
     val profileRepository: ProfileRepository = FirebaseProfileRepository()
     val profileDetailsRepository: ProfileDetailsRepository = FirestoreProfileDetailsRepository(context)
+    val goalsRepository: GoalsRepository = FirestoreGoalsRepository()
 }

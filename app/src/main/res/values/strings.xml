@@ -174,4 +174,13 @@
     <string name="document_type_hint">Introduce el tipo de documento</string>
     <string name="document_number">Número del documento</string>
     <string name="document_number_hint">Introduce tu número de documento</string>
+
+    <!-- Metas -->
+    <string name="home_goals">Mis metas</string>
+    <string name="goals_title">Mis metas</string>
+    <string name="goals_empty">Aún no tienes metas.\nPronto podrás crear la primera.</string>
+    <string name="goals_error">No pudimos cargar tus metas. Revisa tu conexión e inténtalo de nuevo.</string>
+    <string name="goals_saved_of">%1$s de %2$s</string>
+    <string name="goals_deadline">Fecha límite: %1$s</string>
+    <string name="goals_completed">¡Meta cumplida!</string>
 </resources>
