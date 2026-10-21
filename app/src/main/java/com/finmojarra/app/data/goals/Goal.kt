@@ -21,3 +21,11 @@ sealed interface GoalsResult {
     data class Success(val goals: List<Goal>) : GoalsResult
     data object Failure : GoalsResult
 }
+
+/** Resultado de crear una meta. */
+sealed interface CreateGoalResult {
+    data object Success : CreateGoalResult
+    data class Failure(val reason: Reason) : CreateGoalResult
+
+    enum class Reason { NoSession, PermissionDenied, Unknown }
+}
