@@ -1,13 +1,12 @@
 package com.finmojarra.app.ui.goals
 
+import android.net.Uri
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.finmojarra.app.R
-import com.finmojarra.app.data.goals.CreateGoalResult
+import com.finmojarra.app.data.goals.GoalWriteResult
 import com.finmojarra.app.data.goals.GoalsRepository
-import java.util.Calendar
-import java.util.TimeZone
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,10 +17,15 @@ data class CreateGoalUiState(
     val name: String = "",
     /** Solo dígitos, sin puntos ni símbolos. */
     val amount: String = "",
-    val deadlineMillis: Long? = null,
+    /** Solo dígitos: cuánto piensa ahorrar cada semana. */
+    val weekly: String = "",
+    /** Imagen elegida en la galería (opcional). */
+    val imageUri: Uri? = null,
     @StringRes val nameError: Int? = null,
     @StringRes val amountError: Int? = null,
-    @StringRes val deadlineError: Int? = null,
+    @StringRes val weeklyError: Int? = null,
+    /** Muestra el diálogo "Completa todos los datos para crear tu meta". */
+    val showIncomplete: Boolean = false,
     val isSaving: Boolean = false,
     @StringRes val message: Int? = null,
     val created: Boolean = false
@@ -39,13 +43,24 @@ class CreateGoalViewModel(
     }
 
     fun onAmountChange(value: String) {
-        val digits = value.filter { it.isDigit() }.trimStart('0').take(MAX_DIGITS)
-        _uiState.update { it.copy(amount = digits, amountError = null) }
+        _uiState.update { it.copy(amount = value.digitsOnly(), amountError = null) }
     }
 
-    /** [millis] llega del selector de fechas (medianoche UTC) o null para quitar la fecha. */
-    fun onDeadlineChange(millis: Long?) {
-        _uiState.update { it.copy(deadlineMillis = millis, deadlineError = null) }
+    fun onWeeklyChange(value: String) {
+        _uiState.update { it.copy(weekly = value.digitsOnly(), weeklyError = null) }
+    }
+
+    /** [uri] es null cuando el usuario cierra la galería sin elegir nada. */
+    fun onImageSelected(uri: Uri?) {
+        if (uri != null) _uiState.update { it.copy(imageUri = uri) }
+    }
+
+    fun removeImage() {
+        _uiState.update { it.copy(imageUri = null) }
+    }
+
+    fun dismissIncomplete() {
+        _uiState.update { it.copy(showIncomplete = false) }
     }
 
     fun dismissMessage() {
@@ -57,16 +72,17 @@ class CreateGoalViewModel(
         if (s.isSaving) return
 
         val nameError = if (s.name.isBlank()) R.string.error_field_required else null
-        val amountError = if ((s.amount.toLongOrNull() ?: 0L) <= 0L) {
-            if (s.amount.isBlank()) R.string.error_field_required else R.string.goals_error_amount
-        } else null
-        val deadlineError = s.deadlineMillis
-            ?.takeIf { it < todayUtcMillis() }
-            ?.let { R.string.goals_error_deadline_past }
+        val amountError = positiveError(s.amount)
+        val weeklyError = positiveError(s.weekly)
 
-        if (nameError != null || amountError != null || deadlineError != null) {
+        if (nameError != null || amountError != null || weeklyError != null) {
             _uiState.update {
-                it.copy(nameError = nameError, amountError = amountError, deadlineError = deadlineError)
+                it.copy(
+                    nameError = nameError,
+                    amountError = amountError,
+                    weeklyError = weeklyError,
+                    showIncomplete = true
+                )
             }
             return
         }
@@ -76,32 +92,27 @@ class CreateGoalViewModel(
             val result = repository.createGoal(
                 name = s.name,
                 targetAmount = s.amount.toLong().toDouble(),
-                deadlineMillis = s.deadlineMillis
+                weeklyAmount = s.weekly.toLong().toDouble(),
+                imageUri = s.imageUri
             )
             _uiState.update {
                 when (result) {
-                    CreateGoalResult.Success -> it.copy(isSaving = false, created = true)
-                    is CreateGoalResult.Failure -> it.copy(
-                        isSaving = false,
-                        message = when (result.reason) {
-                            CreateGoalResult.Reason.PermissionDenied -> R.string.goals_err_permission
-                            CreateGoalResult.Reason.NoSession -> R.string.profile_err_no_session
-                            CreateGoalResult.Reason.Unknown -> R.string.error_server_body
-                        }
-                    )
+                    GoalWriteResult.Success -> it.copy(isSaving = false, created = true)
+                    is GoalWriteResult.Failure ->
+                        it.copy(isSaving = false, message = result.reason.messageRes())
                 }
             }
         }
     }
 
-    /** Medianoche UTC del día de hoy según la fecha local (el selector trabaja en UTC). */
-    private fun todayUtcMillis(): Long {
-        val local = Calendar.getInstance()
-        return Calendar.getInstance(TimeZone.getTimeZone("UTC")).apply {
-            clear()
-            set(local.get(Calendar.YEAR), local.get(Calendar.MONTH), local.get(Calendar.DAY_OF_MONTH))
-        }.timeInMillis
+    @StringRes
+    private fun positiveError(digits: String): Int? = when {
+        digits.isBlank() -> R.string.error_field_required
+        (digits.toLongOrNull() ?: 0L) <= 0L -> R.string.goals_error_amount
+        else -> null
     }
+
+    private fun String.digitsOnly() = filter { it.isDigit() }.trimStart('0').take(MAX_DIGITS)
 
     private companion object {
         const val MAX_NAME = 40
