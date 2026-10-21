@@ -178,9 +178,21 @@
     <!-- Metas -->
     <string name="home_goals">Mis metas</string>
     <string name="goals_title">Mis metas</string>
-    <string name="goals_empty">Aún no tienes metas.\nPronto podrás crear la primera.</string>
+    <string name="goals_empty">Aún no tienes metas.\nCrea la primera con el botón de abajo.</string>
     <string name="goals_error">No pudimos cargar tus metas. Revisa tu conexión e inténtalo de nuevo.</string>
     <string name="goals_saved_of">%1$s de %2$s</string>
     <string name="goals_deadline">Fecha límite: %1$s</string>
     <string name="goals_completed">¡Meta cumplida!</string>
+    <string name="goals_create_button">Crear meta</string>
+    <string name="goals_create_title">Nueva meta</string>
+    <string name="goals_name_label">Nombre de la meta</string>
+    <string name="goals_name_placeholder">Ej: Viaje a Cartagena</string>
+    <string name="goals_amount_label">Monto a ahorrar</string>
+    <string name="goals_amount_placeholder">Ej: 2000000</string>
+    <string name="goals_deadline_label">Fecha límite (opcional)</string>
+    <string name="goals_deadline_placeholder">Seleccionar fecha</string>
+    <string name="goals_remove_deadline">Quitar fecha límite</string>
+    <string name="goals_error_amount">El monto debe ser mayor a 0</string>
+    <string name="goals_error_deadline_past">La fecha no puede ser anterior a hoy</string>
+    <string name="goals_err_permission">No tienes permiso para guardar metas. Revisa las reglas de Firestore.</string>
 </resources>
