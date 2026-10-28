@@ -145,7 +145,7 @@ private fun QuoteBlock(level: LevelContent) {
         )
         Column(modifier = Modifier.padding(12.dp)) {
             Text(
-                text = stringResource(level.pillQuote),
+                text = stringResource(level.detailQuote),
                 style = MaterialTheme.typography.titleMedium.copy(
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Bold

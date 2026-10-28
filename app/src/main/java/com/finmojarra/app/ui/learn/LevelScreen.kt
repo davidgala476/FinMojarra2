@@ -176,7 +176,7 @@ private fun FeaturedVideoCard(level: LevelContent, onWatchVideo: () -> Unit) {
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
-                    text = stringResource(R.string.learn_duration),
+                    text = stringResource(level.duration),
                     style = MaterialTheme.typography.bodySmall.copy(fontSize = 10.sp),
                     color = FinMutedText
                 )
@@ -184,7 +184,7 @@ private fun FeaturedVideoCard(level: LevelContent, onWatchVideo: () -> Unit) {
         }
 
         Spacer(modifier = Modifier.height(10.dp))
-        VideoThumbnail(onClick = onWatchVideo)
+        VideoThumbnail(level = level, onClick = onWatchVideo)
 
         Spacer(modifier = Modifier.height(12.dp))
         Text(
@@ -282,7 +282,7 @@ private fun FeaturedVideoCard(level: LevelContent, onWatchVideo: () -> Unit) {
  * la duración arriba a la derecha. Es un dibujo hecho con Compose (no hay archivo de video).
  */
 @Composable
-private fun VideoThumbnail(onClick: () -> Unit) {
+private fun VideoThumbnail(level: LevelContent, onClick: () -> Unit) {
     val shape = RoundedCornerShape(12.dp)
     Box(
         modifier = Modifier
@@ -356,7 +356,7 @@ private fun VideoThumbnail(onClick: () -> Unit) {
             )
             Spacer(modifier = Modifier.width(4.dp))
             Text(
-                text = stringResource(R.string.learn_duration),
+                text = stringResource(level.duration),
                 style = MaterialTheme.typography.bodySmall.copy(fontSize = 10.sp),
                 color = FinWhite
             )
