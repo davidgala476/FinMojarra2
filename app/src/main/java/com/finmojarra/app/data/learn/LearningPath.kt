@@ -57,12 +57,13 @@ object LearningCatalog {
             hasContent = true
         ),
         LearningPath(
-            id = "estrategico",
+            id = LearningLevels.STRATEGIC_ID,
             title = R.string.learn_path_strategic_title,
             badge = R.string.learn_path_strategic_badge,
-            completedLessons = 1,
+            completedLessons = 0,
             totalLessons = 3,
-            nextMilestoneXp = 1_000
+            nextMilestoneXp = 1_000,
+            hasContent = true
         )
     )
 }
