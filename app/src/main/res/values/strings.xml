@@ -314,4 +314,23 @@
     <string name="learn_l2_quiz_question">“¿Cuándo te conviene hacer tu compra más grande del mes para pagarla con calma?”</string>
     <string name="learn_l2_quiz_option_a">A) El mismo día que te pagan el sueldo</string>
     <string name="learn_l2_quiz_option_b">B) Justo al día siguiente de tu fecha de corte</string>
+
+    <!-- Vamos a aprender: nivel 3 de "Estratégico" -->
+    <string name="learn_l3_duration">2:40 min</string>
+    <string name="learn_l3_video_title">Interés Compuesto: Cómo poner a trabajar tu dinero mientras duermes</string>
+    <string name="learn_l3_video_desc">Una animación dinámica que ilustra el “efecto bola de nieve” financiero. Mira en tiempo real cómo tu dinero genera dinero sin que tú tengas que hacer nada, y por qué empezar temprano marca la diferencia.</string>
+    <string name="learn_l3_author_meta">Finanzas personales · Avanzado</string>
+    <string name="learn_l3_pill_quote">“Imagínate que pides prestada una escalera y pagas un alquiler minúsculo cada mes, pero nunca devuelves la escalera.”</string>
+    <string name="learn_l3_pill_text">¿Te ahorraste algo? No. Al cabo de dos años habrás pagado tres escaleras enteras y sigues debiendo la original.</string>
+    <string name="learn_l3_detail_quote">“El interés compuesto es dinero que gana más dinero por ti mientras duermes.”</string>
+    <string name="learn_l3_detail_text">No solo ganas intereses sobre lo que ahorraste, sino también sobre los intereses acumulados anteriores.</string>
+    <string name="learn_l3_pill_category">INTERÉS COMPUESTO &amp; INVERSIONES</string>
+    <string name="learn_l3_pill_title">La bola de nieve a tu favor</string>
+    <string name="learn_l3_card_mattress_title">Dejar la plata bajo el colchón</string>
+    <string name="learn_l3_card_mattress_desc">La inflación le quita valor año tras año (≈ 7% anual).</string>
+    <string name="learn_l3_card_invest_title">Invertir con interés</string>
+    <string name="learn_l3_card_invest_desc">Las ganancias generan nuevas ganancias y se multiplican.</string>
+    <string name="learn_l3_quiz_question">“Si inviertes $100 y ganas $10 de interés el primer año, ¿sobre cuánto calculas el interés del segundo año?”</string>
+    <string name="learn_l3_quiz_option_a">A) Sobre los mismos $100 iniciales</string>
+    <string name="learn_l3_quiz_option_b">B) Sobre $110 (capital + ganancias)</string>
 </resources>
