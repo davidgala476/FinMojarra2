@@ -60,6 +60,7 @@ fun GoalDetailScreen(
     photoStamp: Long,
     onBack: () -> Unit,
     onOpenProfile: () -> Unit,
+    onOpenSavings: () -> Unit,
     onDeleted: () -> Unit,
     onLearnToSave: () -> Unit = {}
 ) {
@@ -78,7 +79,11 @@ fun GoalDetailScreen(
         isLoading = state.isWorking
     ) {
         Spacer(modifier = Modifier.height(12.dp))
-        GoalsTabs(modifier = Modifier.padding(horizontal = 24.dp))
+        GoalsTabs(
+            selected = GoalsTab.Goals,
+            onSavings = onOpenSavings,
+            modifier = Modifier.padding(horizontal = 24.dp)
+        )
 
         when {
             state.isLoading -> Box(Modifier.weight(1f).fillMaxSize(), Alignment.Center) {

@@ -85,7 +85,7 @@ fun GoalWriteResult.Reason.messageRes(): Int = when (this) {
  */
 @Composable
 fun GoalsScaffold(
-    onBack: () -> Unit,
+    onBack: (() -> Unit)?,
     onOpenProfile: () -> Unit,
     photoPath: String,
     photoStamp: Long,
@@ -112,19 +112,22 @@ fun GoalsScaffold(
                     .padding(top = 12.dp)
                     .height(48.dp)
             ) {
-                IconButton(
-                    onClick = onBack,
-                    modifier = Modifier
-                        .align(Alignment.CenterStart)
-                        .padding(start = 12.dp)
-                        .size(48.dp)
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_chevron_left),
-                        contentDescription = stringResource(R.string.action_back),
-                        tint = FinSlate900,
-                        modifier = Modifier.size(32.dp)
-                    )
+                // Sin flecha en el inicio (Ahorros): ahí no hay pantalla a la que volver.
+                if (onBack != null) {
+                    IconButton(
+                        onClick = onBack,
+                        modifier = Modifier
+                            .align(Alignment.CenterStart)
+                            .padding(start = 12.dp)
+                            .size(48.dp)
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_chevron_left),
+                            contentDescription = stringResource(R.string.action_back),
+                            tint = FinSlate900,
+                            modifier = Modifier.size(32.dp)
+                        )
+                    }
                 }
                 Text(
                     text = stringResource(R.string.app_name),
@@ -152,11 +155,18 @@ fun GoalsScaffold(
     }
 }
 
-/** Pestañas de arriba: "Ahorros | Metas | Vamos a aprender" (Metas queda seleccionada). */
+enum class GoalsTab { Savings, Goals, Learn }
+
+/**
+ * Pestañas de arriba: "Ahorros | Metas | Vamos a aprender". La pestaña [selected] se ve
+ * negra; las otras llevan a su módulo si tienen callback (si es null no hacen nada).
+ */
 @Composable
 fun GoalsTabs(
+    selected: GoalsTab,
     modifier: Modifier = Modifier,
     onSavings: (() -> Unit)? = null,
+    onGoals: (() -> Unit)? = null,
     onLearn: (() -> Unit)? = null
 ) {
     Row(
@@ -164,16 +174,32 @@ fun GoalsTabs(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        TabPill(stringResource(R.string.goals_tab_savings), selected = false, onClick = onSavings)
-        TabPill(stringResource(R.string.goals_tab_goals), selected = true, onClick = null)
-        TabPill(stringResource(R.string.goals_tab_learn), selected = false, onClick = onLearn)
+        TabPill(
+            text = stringResource(R.string.goals_tab_savings),
+            selected = selected == GoalsTab.Savings,
+            onClick = onSavings
+        )
+        TabPill(
+            text = stringResource(R.string.goals_tab_goals),
+            selected = selected == GoalsTab.Goals,
+            onClick = onGoals
+        )
+        TabPill(
+            text = stringResource(R.string.goals_tab_learn),
+            selected = selected == GoalsTab.Learn,
+            onClick = onLearn
+        )
     }
 }
 
 @Composable
 private fun TabPill(text: String, selected: Boolean, onClick: (() -> Unit)?) {
     val shape = RoundedCornerShape(50)
-    val click = if (onClick != null) Modifier.clickable(role = Role.Tab, onClick = onClick) else Modifier
+    val click = if (onClick != null && !selected) {
+        Modifier.clickable(role = Role.Tab, onClick = onClick)
+    } else {
+        Modifier
+    }
     Text(
         text = text,
         style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Medium),

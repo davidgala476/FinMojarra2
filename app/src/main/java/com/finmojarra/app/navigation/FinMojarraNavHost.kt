@@ -150,9 +150,19 @@ fun FinMojarraNavHost(
         }
 
         composable(Routes.HOME) {
+            val viewModel: GoalsViewModel = viewModel(
+                factory = viewModelFactory {
+                    initializer { GoalsViewModel(container.goalsRepository) }
+                }
+            )
+            val details by container.profileDetailsRepository.details.collectAsStateWithLifecycle()
             HomeScreen(
+                viewModel = viewModel,
+                photoPath = details.photoPath,
+                photoStamp = details.photoStamp,
                 onOpenProfile = { navController.navigate(Routes.PERFIL) },
-                onOpenGoals = { navController.navigate(Routes.METAS) }
+                onOpenGoals = { navController.navigate(Routes.METAS) },
+                onCreateGoal = { navController.navigate(Routes.METAS_NUEVA) }
             )
         }
 
@@ -169,6 +179,7 @@ fun FinMojarraNavHost(
                 photoStamp = details.photoStamp,
                 onBack = { navController.popBackStack() },
                 onOpenProfile = { navController.navigate(Routes.PERFIL) },
+                onOpenSavings = { navController.popBackStack(Routes.HOME, inclusive = false) },
                 onOpenGoal = { id -> navController.navigate("${Routes.METAS_DETALLE}/$id") },
                 onCreateGoal = { navController.navigate(Routes.METAS_NUEVA) }
             )
@@ -191,6 +202,7 @@ fun FinMojarraNavHost(
                 photoStamp = details.photoStamp,
                 onBack = { navController.popBackStack() },
                 onOpenProfile = { navController.navigate(Routes.PERFIL) },
+                onOpenSavings = { navController.popBackStack(Routes.HOME, inclusive = false) },
                 onDeleted = { navController.popBackStack() }
             )
         }

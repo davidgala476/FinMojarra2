@@ -54,6 +54,7 @@ fun GoalsScreen(
     photoStamp: Long,
     onBack: () -> Unit,
     onOpenProfile: () -> Unit,
+    onOpenSavings: () -> Unit,
     onOpenGoal: (String) -> Unit,
     onCreateGoal: () -> Unit
 ) {
@@ -88,7 +89,11 @@ fun GoalsScreen(
         }
     ) {
         Spacer(modifier = Modifier.height(12.dp))
-        GoalsTabs(modifier = Modifier.padding(horizontal = 24.dp))
+        GoalsTabs(
+            selected = GoalsTab.Goals,
+            onSavings = onOpenSavings,
+            modifier = Modifier.padding(horizontal = 24.dp)
+        )
         Spacer(modifier = Modifier.height(12.dp))
 
         Box(modifier = Modifier.weight(1f)) {
