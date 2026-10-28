@@ -61,8 +61,8 @@ fun GoalDetailScreen(
     onBack: () -> Unit,
     onOpenProfile: () -> Unit,
     onOpenSavings: () -> Unit,
-    onDeleted: () -> Unit,
-    onLearnToSave: () -> Unit = {}
+    onOpenLearn: () -> Unit,
+    onDeleted: () -> Unit
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val goal = state.goal
@@ -82,6 +82,7 @@ fun GoalDetailScreen(
         GoalsTabs(
             selected = GoalsTab.Goals,
             onSavings = onOpenSavings,
+            onLearn = onOpenLearn,
             modifier = Modifier.padding(horizontal = 24.dp)
         )
 
@@ -115,7 +116,7 @@ fun GoalDetailScreen(
                 number = state.number,
                 onMoveMoney = viewModel::openDialog,
                 onDelete = viewModel::askDelete,
-                onLearnToSave = onLearnToSave,
+                onLearnToSave = onOpenLearn,
                 modifier = Modifier.weight(1f)
             )
         }

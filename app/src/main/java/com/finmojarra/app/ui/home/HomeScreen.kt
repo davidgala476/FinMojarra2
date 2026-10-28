@@ -104,6 +104,7 @@ fun HomeScreen(
     photoStamp: Long,
     onOpenProfile: () -> Unit,
     onOpenGoals: () -> Unit,
+    onOpenLearn: () -> Unit,
     onCreateGoal: () -> Unit
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -119,6 +120,7 @@ fun HomeScreen(
         GoalsTabs(
             selected = GoalsTab.Savings,
             onGoals = onOpenGoals,
+            onLearn = onOpenLearn,
             modifier = Modifier.padding(horizontal = 24.dp)
         )
 

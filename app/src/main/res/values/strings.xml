@@ -254,4 +254,17 @@
     <string name="home_chart_goal_label">Meta %1$d</string>
     <string name="home_chart_more">Se muestran %1$d de %2$d metas</string>
     <string name="home_chart_empty">Cuando crees una meta, aquí verás cómo va tu progreso.</string>
+
+    <!-- Vamos a aprender -->
+    <string name="learn_path_credit_title">Tarjeta de crédito sin miedo</string>
+    <string name="learn_path_credit_badge">Mojarra Junior</string>
+    <string name="learn_path_practical_title">Intermedio práctico</string>
+    <string name="learn_path_practical_badge">Mojarra Exploradora</string>
+    <string name="learn_path_strategic_title">Estratégico</string>
+    <string name="learn_path_strategic_badge">Mojarra Estratega</string>
+    <string name="learn_completed">%1$d de %2$d completados</string>
+    <string name="learn_percent">%1$d%%</string>
+    <string name="learn_xp_earned">XP acumulados</string>
+    <string name="learn_next_milestone">Próximo hito</string>
+    <string name="learn_xp_value">%1$s XP</string>
 </resources>

@@ -29,6 +29,7 @@ import com.finmojarra.app.ui.goals.GoalDetailViewModel
 import com.finmojarra.app.ui.goals.GoalsScreen
 import com.finmojarra.app.ui.goals.GoalsViewModel
 import com.finmojarra.app.ui.home.HomeScreen
+import com.finmojarra.app.ui.learn.LearnScreen
 import com.finmojarra.app.ui.profile.AddressScreen
 import com.finmojarra.app.ui.profile.DemographicsScreen
 import com.finmojarra.app.ui.profile.DocumentScreen
@@ -49,6 +50,7 @@ object Routes {
     const val METAS_NUEVA = "metas/nueva"
     const val METAS_DETALLE = "meta"
     const val METAS_DETALLE_PATTERN = "meta/{goalId}"
+    const val APRENDER = "aprender"
     const val PERFIL = "perfil"
     const val PERFIL_FOTO = "perfil/foto"
     const val PERFIL_DEMOGRAFICA = "perfil/demografica"
@@ -162,6 +164,7 @@ fun FinMojarraNavHost(
                 photoStamp = details.photoStamp,
                 onOpenProfile = { navController.navigate(Routes.PERFIL) },
                 onOpenGoals = { navController.navigate(Routes.METAS) },
+                onOpenLearn = { navController.navigate(Routes.APRENDER) },
                 onCreateGoal = { navController.navigate(Routes.METAS_NUEVA) }
             )
         }
@@ -180,6 +183,7 @@ fun FinMojarraNavHost(
                 onBack = { navController.popBackStack() },
                 onOpenProfile = { navController.navigate(Routes.PERFIL) },
                 onOpenSavings = { navController.popBackStack(Routes.HOME, inclusive = false) },
+                onOpenLearn = { navController.goToTab(Routes.APRENDER) },
                 onOpenGoal = { id -> navController.navigate("${Routes.METAS_DETALLE}/$id") },
                 onCreateGoal = { navController.navigate(Routes.METAS_NUEVA) }
             )
@@ -203,6 +207,7 @@ fun FinMojarraNavHost(
                 onBack = { navController.popBackStack() },
                 onOpenProfile = { navController.navigate(Routes.PERFIL) },
                 onOpenSavings = { navController.popBackStack(Routes.HOME, inclusive = false) },
+                onOpenLearn = { navController.goToTab(Routes.APRENDER) },
                 onDeleted = { navController.popBackStack() }
             )
         }
@@ -221,6 +226,18 @@ fun FinMojarraNavHost(
                 onBack = { navController.popBackStack() },
                 onOpenProfile = { navController.navigate(Routes.PERFIL) },
                 onCreated = { navController.popBackStack() }
+            )
+        }
+
+        composable(Routes.APRENDER) {
+            val details by container.profileDetailsRepository.details.collectAsStateWithLifecycle()
+            LearnScreen(
+                photoPath = details.photoPath,
+                photoStamp = details.photoStamp,
+                onBack = { navController.popBackStack() },
+                onOpenProfile = { navController.navigate(Routes.PERFIL) },
+                onOpenSavings = { navController.popBackStack(Routes.HOME, inclusive = false) },
+                onOpenGoals = { navController.goToTab(Routes.METAS) }
             )
         }
 
@@ -297,3 +314,11 @@ private fun profileDetailsViewModel(container: AppContainer): ProfileDetailsView
             initializer { ProfileDetailsViewModel(container.profileDetailsRepository) }
         }
     )
+
+/** Cambia de pestaña (Metas / Aprender) sin apilar pantallas: siempre queda Home debajo. */
+private fun NavHostController.goToTab(route: String) {
+    navigate(route) {
+        popUpTo(Routes.HOME)
+        launchSingleTop = true
+    }
+}
