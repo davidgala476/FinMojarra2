@@ -275,6 +275,7 @@ fun FinMojarraNavHost(
         composable(Routes.APRENDER_PILDORAS) {
             val details by container.profileDetailsRepository.details.collectAsStateWithLifecycle()
             val progressViewModel = learnProgressViewModel(container)
+            val steps by progressViewModel.steps.collectAsStateWithLifecycle()
             PillsScreen(
                 photoPath = details.photoPath,
                 photoStamp = details.photoStamp,
@@ -283,6 +284,7 @@ fun FinMojarraNavHost(
                 onOpenSavings = { navController.popBackStack(Routes.HOME, inclusive = false) },
                 onOpenGoals = { navController.goToTab(Routes.METAS) },
                 onLearn = { navController.navigate(Routes.APRENDER_PILDORA) },
+                quizDone = CreditLevelContent.STEP_QUIZ in steps,
                 onCorrectAnswer = { progressViewModel.complete(CreditLevelContent.STEP_QUIZ) }
             )
         }

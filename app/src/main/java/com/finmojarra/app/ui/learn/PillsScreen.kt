@@ -41,7 +41,11 @@ private enum class OptionState { Idle, Wrong, Right }
 /**
  * "Píldoras en un minuto": una píldora para leer (botón Aprender) y la pregunta interactiva.
  * Al elegir una opción se muestra "Respuesta correcta" (verde) o "Respuesta incorrecta"
- * (rojo); si te equivocas puedes intentar con otra opción.
+ * (rojo); si te equivocas puedes intentar con otra opción, las veces que quieras.
+ *
+ * Cuando la pregunta ya se respondió bien ([quizDone], dato guardado en Firebase) queda
+ * bloqueada: se muestra la opción correcta en verde y no se puede volver a responder,
+ * ni siquiera después de salir de la pantalla o cerrar la app.
  */
 @Composable
 fun PillsScreen(
@@ -52,11 +56,15 @@ fun PillsScreen(
     onOpenSavings: () -> Unit,
     onOpenGoals: () -> Unit,
     onLearn: () -> Unit,
+    quizDone: Boolean,
     onCorrectAnswer: () -> Unit
 ) {
     val quiz = CreditLevelContent.quiz
     var selected by rememberSaveable { mutableStateOf<Int?>(null) }
-    val answeredCorrectly = selected == quiz.correctIndex
+    // Bloqueada si ya estaba guardada como correcta o si se acaba de acertar.
+    val answeredCorrectly = quizDone || selected == quiz.correctIndex
+    // Si ya estaba resuelta de antes, se muestra la opción correcta marcada.
+    val shownSelection = if (quizDone) quiz.correctIndex else selected
 
     LearnFrame(
         photoPath = photoPath,
@@ -71,15 +79,17 @@ fun PillsScreen(
 
         QuizCard(
             quiz = quiz,
-            selected = selected,
+            selected = shownSelection,
             locked = answeredCorrectly,
             onSelect = { index ->
-                selected = index
-                if (index == quiz.correctIndex) onCorrectAnswer()
+                if (!answeredCorrectly) {
+                    selected = index
+                    if (index == quiz.correctIndex) onCorrectAnswer()
+                }
             }
         )
 
-        selected?.let {
+        shownSelection?.let {
             Text(
                 text = stringResource(
                     if (answeredCorrectly) R.string.learn_quiz_correct else R.string.learn_quiz_incorrect
