@@ -29,6 +29,13 @@ import com.finmojarra.app.ui.goals.GoalDetailViewModel
 import com.finmojarra.app.ui.goals.GoalsScreen
 import com.finmojarra.app.ui.goals.GoalsViewModel
 import com.finmojarra.app.ui.home.HomeScreen
+import com.finmojarra.app.data.learn.LearningLevels
+import com.finmojarra.app.data.learn.LearningSteps
+import com.finmojarra.app.ui.learn.LearnProgressViewModel
+import com.finmojarra.app.ui.learn.LearnScreen
+import com.finmojarra.app.ui.learn.LevelScreen
+import com.finmojarra.app.ui.learn.PillDetailScreen
+import com.finmojarra.app.ui.learn.PillsScreen
 import com.finmojarra.app.ui.profile.AddressScreen
 import com.finmojarra.app.ui.profile.DemographicsScreen
 import com.finmojarra.app.ui.profile.DocumentScreen
@@ -49,6 +56,13 @@ object Routes {
     const val METAS_NUEVA = "metas/nueva"
     const val METAS_DETALLE = "meta"
     const val METAS_DETALLE_PATTERN = "meta/{goalId}"
+    const val APRENDER = "aprender"
+    const val APRENDER_NIVEL = "aprender/nivel"
+    const val APRENDER_NIVEL_PATTERN = "aprender/nivel/{levelId}"
+    const val APRENDER_PILDORAS = "aprender/pildoras"
+    const val APRENDER_PILDORAS_PATTERN = "aprender/pildoras/{levelId}"
+    const val APRENDER_PILDORA = "aprender/pildora"
+    const val APRENDER_PILDORA_PATTERN = "aprender/pildora/{levelId}"
     const val PERFIL = "perfil"
     const val PERFIL_FOTO = "perfil/foto"
     const val PERFIL_DEMOGRAFICA = "perfil/demografica"
@@ -162,6 +176,7 @@ fun FinMojarraNavHost(
                 photoStamp = details.photoStamp,
                 onOpenProfile = { navController.navigate(Routes.PERFIL) },
                 onOpenGoals = { navController.navigate(Routes.METAS) },
+                onOpenLearn = { navController.navigate(Routes.APRENDER) },
                 onCreateGoal = { navController.navigate(Routes.METAS_NUEVA) }
             )
         }
@@ -180,6 +195,7 @@ fun FinMojarraNavHost(
                 onBack = { navController.popBackStack() },
                 onOpenProfile = { navController.navigate(Routes.PERFIL) },
                 onOpenSavings = { navController.popBackStack(Routes.HOME, inclusive = false) },
+                onOpenLearn = { navController.goToTab(Routes.APRENDER) },
                 onOpenGoal = { id -> navController.navigate("${Routes.METAS_DETALLE}/$id") },
                 onCreateGoal = { navController.navigate(Routes.METAS_NUEVA) }
             )
@@ -203,6 +219,7 @@ fun FinMojarraNavHost(
                 onBack = { navController.popBackStack() },
                 onOpenProfile = { navController.navigate(Routes.PERFIL) },
                 onOpenSavings = { navController.popBackStack(Routes.HOME, inclusive = false) },
+                onOpenLearn = { navController.goToTab(Routes.APRENDER) },
                 onDeleted = { navController.popBackStack() }
             )
         }
@@ -221,6 +238,87 @@ fun FinMojarraNavHost(
                 onBack = { navController.popBackStack() },
                 onOpenProfile = { navController.navigate(Routes.PERFIL) },
                 onCreated = { navController.popBackStack() }
+            )
+        }
+
+        composable(Routes.APRENDER) {
+            val details by container.profileDetailsRepository.details.collectAsStateWithLifecycle()
+            val progressViewModel = learnProgressViewModel(container)
+            val steps by progressViewModel.steps.collectAsStateWithLifecycle()
+            LearnScreen(
+                photoPath = details.photoPath,
+                photoStamp = details.photoStamp,
+                onBack = { navController.popBackStack() },
+                onOpenProfile = { navController.navigate(Routes.PERFIL) },
+                onOpenSavings = { navController.popBackStack(Routes.HOME, inclusive = false) },
+                onOpenGoals = { navController.goToTab(Routes.METAS) },
+                stepsByPath = steps,
+                onOpenPath = { id -> navController.navigate("${Routes.APRENDER_NIVEL}/$id") }
+            )
+        }
+
+        composable(
+            route = Routes.APRENDER_NIVEL_PATTERN,
+            arguments = listOf(navArgument("levelId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val level = LearningLevels.byId(backStackEntry.arguments?.getString("levelId").orEmpty())
+            val details by container.profileDetailsRepository.details.collectAsStateWithLifecycle()
+            val progressViewModel = learnProgressViewModel(container)
+            val steps by progressViewModel.steps.collectAsStateWithLifecycle()
+            LevelScreen(
+                level = level,
+                photoPath = details.photoPath,
+                photoStamp = details.photoStamp,
+                onBack = { navController.popBackStack() },
+                onOpenProfile = { navController.navigate(Routes.PERFIL) },
+                onOpenSavings = { navController.popBackStack(Routes.HOME, inclusive = false) },
+                onOpenGoals = { navController.goToTab(Routes.METAS) },
+                completedSteps = steps[level.pathId].orEmpty(),
+                onWatchVideo = {
+                    progressViewModel.complete(level.pathId, LearningSteps.VIDEO)
+                    navController.navigate("${Routes.APRENDER_PILDORAS}/${level.pathId}")
+                }
+            )
+        }
+
+        composable(
+            route = Routes.APRENDER_PILDORAS_PATTERN,
+            arguments = listOf(navArgument("levelId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val level = LearningLevels.byId(backStackEntry.arguments?.getString("levelId").orEmpty())
+            val details by container.profileDetailsRepository.details.collectAsStateWithLifecycle()
+            val progressViewModel = learnProgressViewModel(container)
+            val steps by progressViewModel.steps.collectAsStateWithLifecycle()
+            PillsScreen(
+                level = level,
+                photoPath = details.photoPath,
+                photoStamp = details.photoStamp,
+                onBack = { navController.popBackStack() },
+                onOpenProfile = { navController.navigate(Routes.PERFIL) },
+                onOpenSavings = { navController.popBackStack(Routes.HOME, inclusive = false) },
+                onOpenGoals = { navController.goToTab(Routes.METAS) },
+                onLearn = { navController.navigate("${Routes.APRENDER_PILDORA}/${level.pathId}") },
+                quizDone = LearningSteps.QUIZ in steps[level.pathId].orEmpty(),
+                onCorrectAnswer = { progressViewModel.complete(level.pathId, LearningSteps.QUIZ) }
+            )
+        }
+
+        composable(
+            route = Routes.APRENDER_PILDORA_PATTERN,
+            arguments = listOf(navArgument("levelId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val level = LearningLevels.byId(backStackEntry.arguments?.getString("levelId").orEmpty())
+            val details by container.profileDetailsRepository.details.collectAsStateWithLifecycle()
+            val progressViewModel = learnProgressViewModel(container)
+            PillDetailScreen(
+                level = level,
+                photoPath = details.photoPath,
+                photoStamp = details.photoStamp,
+                onBack = { navController.popBackStack() },
+                onOpenProfile = { navController.navigate(Routes.PERFIL) },
+                onOpenSavings = { navController.popBackStack(Routes.HOME, inclusive = false) },
+                onOpenGoals = { navController.goToTab(Routes.METAS) },
+                onViewed = { progressViewModel.complete(level.pathId, LearningSteps.PILL) }
             )
         }
 
@@ -295,5 +393,22 @@ private fun profileDetailsViewModel(container: AppContainer): ProfileDetailsView
     viewModel(
         factory = viewModelFactory {
             initializer { ProfileDetailsViewModel(container.profileDetailsRepository) }
+        }
+    )
+
+/** Cambia de pestaña (Metas / Aprender) sin apilar pantallas: siempre queda Home debajo. */
+private fun NavHostController.goToTab(route: String) {
+    navigate(route) {
+        popUpTo(Routes.HOME)
+        launchSingleTop = true
+    }
+}
+
+/** Avance de todos los cursos de "Vamos a aprender" (uno por pantalla; todos leen el mismo dato). */
+@Composable
+private fun learnProgressViewModel(container: AppContainer): LearnProgressViewModel =
+    viewModel(
+        factory = viewModelFactory {
+            initializer { LearnProgressViewModel(container.learningProgressRepository) }
         }
     )

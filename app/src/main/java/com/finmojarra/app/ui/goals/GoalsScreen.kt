@@ -55,6 +55,7 @@ fun GoalsScreen(
     onBack: () -> Unit,
     onOpenProfile: () -> Unit,
     onOpenSavings: () -> Unit,
+    onOpenLearn: () -> Unit,
     onOpenGoal: (String) -> Unit,
     onCreateGoal: () -> Unit
 ) {
@@ -92,6 +93,7 @@ fun GoalsScreen(
         GoalsTabs(
             selected = GoalsTab.Goals,
             onSavings = onOpenSavings,
+            onLearn = onOpenLearn,
             modifier = Modifier.padding(horizontal = 24.dp)
         )
         Spacer(modifier = Modifier.height(12.dp))

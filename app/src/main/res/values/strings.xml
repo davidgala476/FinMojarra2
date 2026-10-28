@@ -254,4 +254,64 @@
     <string name="home_chart_goal_label">Meta %1$d</string>
     <string name="home_chart_more">Se muestran %1$d de %2$d metas</string>
     <string name="home_chart_empty">Cuando crees una meta, aquí verás cómo va tu progreso.</string>
+
+    <!-- Vamos a aprender -->
+    <string name="learn_path_credit_title">Tarjeta de crédito sin miedo</string>
+    <string name="learn_path_credit_badge">Mojarra Junior</string>
+    <string name="learn_path_practical_title">Intermedio práctico</string>
+    <string name="learn_path_practical_badge">Mojarra Exploradora</string>
+    <string name="learn_path_strategic_title">Estratégico</string>
+    <string name="learn_path_strategic_badge">Mojarra Estratega</string>
+    <string name="learn_completed">%1$d de %2$d completados</string>
+    <string name="learn_percent">%1$d%%</string>
+    <string name="learn_xp_earned">XP acumulados</string>
+    <string name="learn_next_milestone">Próximo hito</string>
+    <string name="learn_xp_value">%1$s XP</string>
+
+    <!-- Vamos a aprender: nivel 1 de "Tarjeta de crédito sin miedo" -->
+    <string name="learn_featured_tag">Destacado</string>
+    <string name="learn_duration">2:30 min</string>
+    <string name="learn_video_title">La tarjeta no es dinero extra: las reglas del juego</string>
+    <string name="learn_video_desc">La tarjeta de crédito no es una extensión de tu salario ni dinero regalado; es dinero prestado que, con un plazo para devolverlo, no cuesta nada si sabes usarlo.</string>
+    <string name="learn_author">Equipo FinMojarra</string>
+    <string name="learn_author_meta">Finanzas personales · Básico</string>
+    <string name="learn_new_tag">Nuevo</string>
+    <string name="learn_watch_video">Ver video</string>
+    <string name="learn_play_description">Reproducir video</string>
+    <string name="learn_pills_title">Píldoras en un minuto</string>
+    <string name="learn_pills_subtitle">Conceptos financieros explicados con pastillas</string>
+    <string name="learn_pill_quote">“Imagínate que un amigo te presta su auto para ir al trabajo”</string>
+    <string name="learn_pill_teaser">¿El auto es tuyo? No. Tienes que devolverlo limpio y en la fecha acordada para que te lo vuelva a prestar.</string>
+    <string name="learn_pill_full">¿El auto es tuyo? No. Tienes que devolverlo limpio y en la fecha acordada para que te lo vuelva a prestar sin cobrarte recargos.</string>
+    <string name="learn_learn_button">Aprender</string>
+    <string name="learn_quiz_title">Pregunta interactiva rápida</string>
+    <string name="learn_quiz_xp">+%1$d XP</string>
+    <string name="learn_quiz_question">“Si tu sueldo mensual es de $1.000 y el banco te da un límite en la tarjeta de $1.500, ¿cuánto dinero tienes realmente para gastar este mes sin endeudarte?”</string>
+    <string name="learn_quiz_options">Opciones:</string>
+    <string name="learn_quiz_option_a">A) $2.500</string>
+    <string name="learn_quiz_option_b">B) Máximo $1.000</string>
+    <string name="learn_quiz_correct">Respuesta correcta</string>
+    <string name="learn_quiz_incorrect">Respuesta incorrecta</string>
+    <string name="learn_pill_category">TARJETA DE CRÉDITO VS DÉBITO</string>
+    <string name="learn_pill_title">La ilusión del dinero “gratis”</string>
+    <string name="learn_real_title">Tu dinero real</string>
+    <string name="learn_real_desc">Lo que ya ganaste con tu esfuerzo. Te pertenece al 100%.</string>
+    <string name="learn_borrowed_title">Dinero prestado</string>
+    <string name="learn_borrowed_desc">Del banco por 30 días. Si te retrasas, los intereses son muy altos.</string>
+
+    <!-- Vamos a aprender: nivel 2 de "Intermedio práctico" -->
+    <string name="learn_l2_video_title">Tarjeta de Crédito: Fecha de Corte vs. Fecha Límite de Pago</string>
+    <string name="learn_l2_video_desc">Aprende de forma visual cómo funciona el calendario bancario de tu tarjeta de crédito. Descubrirás la diferencia exacta entre la fecha de corte y la fecha límite de pago, y cómo usarla a tu favor.</string>
+    <string name="learn_l2_author_meta">Finanzas personales · Intermedio</string>
+    <string name="learn_l2_pill_quote">“Si compras un día después de tu corte, tienes hasta 50 días para pagar”</string>
+    <string name="learn_l2_pill_text">¿Por qué pagar inmediatamente si puedes usar el dinero del banco casi dos meses sin pagar un solo peso de interés?</string>
+    <string name="learn_l2_pill_category">TARJETA DE CRÉDITO: CORTE VS PAGO</string>
+    <string name="learn_l2_pill_title">El truco de los 50 días de crédito gratis</string>
+    <string name="learn_l2_card_cut_title">Fecha de Corte</string>
+    <string name="learn_l2_card_cut_desc">El día que el banco hace la cuenta del mes.</string>
+    <string name="learn_l2_card_due_title">Fecha Límite</string>
+    <string name="learn_l2_card_due_desc">Último plazo permitido para evitar intereses de mora.</string>
+    <string name="learn_l2_quiz_question">“¿Cuándo te conviene hacer tu compra más grande del mes para pagarla con calma?”</string>
+    <string name="learn_l2_quiz_option_a">A) El mismo día que te pagan el sueldo</string>
+    <string name="learn_l2_quiz_option_b">B) Justo al día siguiente de tu fecha de corte</string>
 </resources>
