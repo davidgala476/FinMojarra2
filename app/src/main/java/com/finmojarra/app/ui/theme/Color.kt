@@ -19,3 +19,9 @@ val FinError = Color(0xFFE5393B)
 val FinSlate900 = Color(0xFF0F172A)
 val FinSlate600 = Color(0xFF475569)
 val FinSlate200 = Color(0xFFE2E8F0)
+
+// Estados de la pregunta interactiva y tarjetas de las píldoras.
+val FinSuccess = Color(0xFF2E9E4A)
+val FinTealDark = Color(0xFF00726D)
+val FinAmber = Color(0xFFF2B705)
+val FinAmberDark = Color(0xFF8A6A00)

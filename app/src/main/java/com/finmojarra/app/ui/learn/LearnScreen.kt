@@ -1,6 +1,8 @@
 package com.finmojarra.app.ui.learn
 
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -19,16 +21,19 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.finmojarra.app.R
+import com.finmojarra.app.data.learn.CreditLevelContent
 import com.finmojarra.app.data.learn.LearningCatalog
 import com.finmojarra.app.data.learn.LearningPath
 import com.finmojarra.app.ui.goals.GoalsScaffold
@@ -49,44 +54,46 @@ fun LearnScreen(
     onBack: () -> Unit,
     onOpenProfile: () -> Unit,
     onOpenSavings: () -> Unit,
-    onOpenGoals: () -> Unit
+    onOpenGoals: () -> Unit,
+    completedSteps: Set<String>,
+    onOpenPath: (String) -> Unit
 ) {
-    GoalsScaffold(
+    LearnFrame(
+        photoPath = photoPath,
+        photoStamp = photoStamp,
         onBack = onBack,
         onOpenProfile = onOpenProfile,
-        photoPath = photoPath,
-        photoStamp = photoStamp
+        onOpenSavings = onOpenSavings,
+        onOpenGoals = onOpenGoals,
+        spacing = 20.dp
     ) {
-        Spacer(modifier = Modifier.height(12.dp))
-        GoalsTabs(
-            selected = GoalsTab.Learn,
-            onSavings = onOpenSavings,
-            onGoals = onOpenGoals,
-            modifier = Modifier.padding(horizontal = 24.dp)
-        )
-
-        Column(
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth()
-                .verticalScroll(rememberScrollState())
-                .padding(horizontal = 24.dp, vertical = 20.dp),
-            verticalArrangement = Arrangement.spacedBy(20.dp)
-        ) {
-            LearningCatalog.paths.forEach { path ->
-                LearningPathCard(path)
-            }
+        LearningCatalog.paths.forEach { path ->
+            LearningPathCard(
+                path = if (path.hasContent) {
+                    path.withCompletedSteps(CreditLevelContent.doneCount(completedSteps))
+                } else {
+                    path
+                },
+                onClick = if (path.hasContent) ({ onOpenPath(path.id) }) else null
+            )
         }
     }
 }
 
 @Composable
-private fun LearningPathCard(path: LearningPath) {
+private fun LearningPathCard(path: LearningPath, onClick: (() -> Unit)?) {
+    val click = if (onClick != null) {
+        Modifier
+            .clip(RoundedCornerShape(16.dp))
+            .clickable(role = Role.Button, onClick = onClick)
+    } else {
+        Modifier
+    }
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(16.dp))
-            .background(FinWhite)
+            .learnCard()
+            .then(click)
             .padding(horizontal = 16.dp, vertical = 18.dp)
     ) {
         Row(
@@ -130,8 +137,9 @@ private fun LearningPathCard(path: LearningPath) {
             )
         }
         Spacer(modifier = Modifier.height(6.dp))
+        val animatedProgress by animateFloatAsState(targetValue = path.progress, label = "pathProgress")
         LinearProgressIndicator(
-            progress = { path.progress },
+            progress = { animatedProgress },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(6.dp)
