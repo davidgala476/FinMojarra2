@@ -1,6 +1,6 @@
 package com.finmojarra.app.data.account
 
-/** Tipo de movimiento de la cuenta del usuario. [key] es el texto que se guarda en Firestore. */
+/** Tipo de movimiento (Define los movimientos con una lista cerrada) . [key] es el texto que se guarda en Firestore. */
 enum class MovementType(val key: String) {
     Deposit("deposit"),
     Withdraw("withdraw"),
@@ -9,7 +9,7 @@ enum class MovementType(val key: String) {
     /** Dinero que vuelve de una meta a la cuenta (sube el saldo). */
     GoalWithdraw("goal_withdraw");
 
-    /** true si el movimiento suma al saldo de la cuenta; false si lo resta. */
+    /** true si el movimiento suma al saldo de la cuenta; false si lo resta.(Es una propiedad) */
     val addsToBalance: Boolean
         get() = this == Deposit || this == GoalWithdraw
 
@@ -18,14 +18,14 @@ enum class MovementType(val key: String) {
     }
 }
 
-/** Un ingreso o un retiro de la cuenta. Los montos están en pesos colombianos (COP). */
+/** Un ingreso o un retiro de la cuenta. Los montos están en pesos . */
 data class Movement(
     val id: String,
     val type: MovementType,
     val amount: Double,
     /** Nombre de la meta, solo en los movimientos entre la cuenta y una meta. */
     val goalName: String? = null,
-    /** Fecha en milisegundos (UTC); null solo un instante, mientras el servidor pone la hora. */
+    /** Fecha   null solo un instante, mientras el servidor pone la hora. */
     val createdAtMillis: Long?
 )
 
