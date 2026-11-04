@@ -32,7 +32,7 @@ data class WeeklySavings(
         get() = if (target <= 0.0) 0f else (saved / target).toFloat().coerceIn(0f, 1f)
 }
 
-/** Cálculos de periodos (semana y mes) con la zona horaria del teléfono. La semana empieza el lunes. */
+/** Cálculos de periodos (semana y mes) con la zona horaria del teléfono.  */
 object AccountSummaries {
 
     fun startOfWeek(now: Long = System.currentTimeMillis()): Long {
