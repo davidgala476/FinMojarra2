@@ -35,7 +35,7 @@ sealed interface AccountResult {
     data object Failure : AccountResult
 }
 
-/** Resultado de ingresar o retirar dinero. */
+/** Resultado de ingresar o retirar dinero. (Muestra el resultado con los posibles errores o si se hizo de manera correcta ) */
 sealed interface AccountWriteResult {
     data object Success : AccountWriteResult
     data class Failure(val reason: Reason) : AccountWriteResult
