@@ -11,7 +11,7 @@ data class InfoCardContent(
 
 /**
  * Todo lo que cambia de un nivel a otro: el video destacado, la píldora, las dos tarjetas
- * de la píldora y la pregunta interactiva. Las pantallas son las mismas para todos.
+ * de la píldora y las preguntas interactivas. Las pantallas son las mismas para todos.
  */
 data class LevelContent(
     /** Id del curso al que pertenece (el mismo de [LearningPath.id]). */
@@ -34,7 +34,8 @@ data class LevelContent(
     val leftCard: InfoCardContent,
     /** Tarjeta de la derecha (amarilla, icono de advertencia). */
     val rightCard: InfoCardContent,
-    val quiz: QuizQuestion
+    /** Las 3 preguntas interactivas del nivel, en el orden en que se muestran. */
+    val quiz: List<QuizQuestion>
 )
 
 /** Niveles construidos. Para agregar otro: un [LevelContent] nuevo y su id en el catálogo. */
@@ -57,11 +58,25 @@ object LearningLevels {
         pillTitle = R.string.learn_pill_title,
         leftCard = InfoCardContent(R.string.learn_real_title, R.string.learn_real_desc),
         rightCard = InfoCardContent(R.string.learn_borrowed_title, R.string.learn_borrowed_desc),
-        quiz = QuizQuestion(
-            question = R.string.learn_quiz_question,
-            options = listOf(R.string.learn_quiz_option_a, R.string.learn_quiz_option_b),
-            correctIndex = 1,
-            xp = 200
+        quiz = listOf(
+            QuizQuestion(
+                question = R.string.learn_quiz_question,
+                options = listOf(R.string.learn_quiz_option_a, R.string.learn_quiz_option_b),
+                correctIndex = 1,
+                xp = 100
+            ),
+            QuizQuestion(
+                question = R.string.learn_q2_question,
+                options = listOf(R.string.learn_q2_option_a, R.string.learn_q2_option_b),
+                correctIndex = 1,
+                xp = 100
+            ),
+            QuizQuestion(
+                question = R.string.learn_q3_question,
+                options = listOf(R.string.learn_q3_option_a, R.string.learn_q3_option_b),
+                correctIndex = 0,
+                xp = 100
+            )
         )
     )
 
@@ -79,11 +94,25 @@ object LearningLevels {
         pillTitle = R.string.learn_l2_pill_title,
         leftCard = InfoCardContent(R.string.learn_l2_card_cut_title, R.string.learn_l2_card_cut_desc),
         rightCard = InfoCardContent(R.string.learn_l2_card_due_title, R.string.learn_l2_card_due_desc),
-        quiz = QuizQuestion(
-            question = R.string.learn_l2_quiz_question,
-            options = listOf(R.string.learn_l2_quiz_option_a, R.string.learn_l2_quiz_option_b),
-            correctIndex = 1,
-            xp = 200
+        quiz = listOf(
+            QuizQuestion(
+                question = R.string.learn_l2_quiz_question,
+                options = listOf(R.string.learn_l2_quiz_option_a, R.string.learn_l2_quiz_option_b),
+                correctIndex = 1,
+                xp = 100
+            ),
+            QuizQuestion(
+                question = R.string.learn_l2_q2_question,
+                options = listOf(R.string.learn_l2_q2_option_a, R.string.learn_l2_q2_option_b),
+                correctIndex = 0,
+                xp = 100
+            ),
+            QuizQuestion(
+                question = R.string.learn_l2_q3_question,
+                options = listOf(R.string.learn_l2_q3_option_a, R.string.learn_l2_q3_option_b),
+                correctIndex = 1,
+                xp = 100
+            )
         )
     )
 
@@ -101,11 +130,25 @@ object LearningLevels {
         pillTitle = R.string.learn_l3_pill_title,
         leftCard = InfoCardContent(R.string.learn_l3_card_mattress_title, R.string.learn_l3_card_mattress_desc),
         rightCard = InfoCardContent(R.string.learn_l3_card_invest_title, R.string.learn_l3_card_invest_desc),
-        quiz = QuizQuestion(
-            question = R.string.learn_l3_quiz_question,
-            options = listOf(R.string.learn_l3_quiz_option_a, R.string.learn_l3_quiz_option_b),
-            correctIndex = 1,
-            xp = 200
+        quiz = listOf(
+            QuizQuestion(
+                question = R.string.learn_l3_quiz_question,
+                options = listOf(R.string.learn_l3_quiz_option_a, R.string.learn_l3_quiz_option_b),
+                correctIndex = 1,
+                xp = 100
+            ),
+            QuizQuestion(
+                question = R.string.learn_l3_q2_question,
+                options = listOf(R.string.learn_l3_q2_option_a, R.string.learn_l3_q2_option_b),
+                correctIndex = 1,
+                xp = 100
+            ),
+            QuizQuestion(
+                question = R.string.learn_l3_q3_question,
+                options = listOf(R.string.learn_l3_q3_option_a, R.string.learn_l3_q3_option_b),
+                correctIndex = 0,
+                xp = 100
+            )
         )
     )
 

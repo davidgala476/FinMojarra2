@@ -333,4 +333,25 @@
     <string name="learn_l3_quiz_question">“Si inviertes $100 y ganas $10 de interés el primer año, ¿sobre cuánto calculas el interés del segundo año?”</string>
     <string name="learn_l3_quiz_option_a">A) Sobre los mismos $100 iniciales</string>
     <string name="learn_l3_quiz_option_b">B) Sobre $110 (capital + ganancias)</string>
+    <!-- Vamos a aprender: preguntas 2 y 3 de cada nivel -->
+    <string name="learn_quiz_counter">Pregunta %1$d de %2$d</string>
+    <string name="learn_quiz_progress">Respuestas correctas: %1$d de %2$d</string>
+    <string name="learn_q2_question">“Cuando pagas con tu tarjeta de crédito, ¿de quién es el dinero que estás gastando?”</string>
+    <string name="learn_q2_option_a">A) Mío, porque ya lo gané</string>
+    <string name="learn_q2_option_b">B) Del banco: me lo presta y tengo que devolverlo</string>
+    <string name="learn_q3_question">“Si te atrasas en el pago de tu tarjeta, ¿qué suele pasar?”</string>
+    <string name="learn_q3_option_a">A) Se generan intereses altos sobre lo que debes</string>
+    <string name="learn_q3_option_b">B) Nada, el banco espera sin ningún costo</string>
+    <string name="learn_l2_q2_question">“¿Qué es la fecha de corte de tu tarjeta?”</string>
+    <string name="learn_l2_q2_option_a">A) El día en que el banco hace la cuenta de tus compras del mes</string>
+    <string name="learn_l2_q2_option_b">B) El día en que se cancela tu tarjeta</string>
+    <string name="learn_l2_q3_question">“¿Qué pasa si pagas después de la fecha límite de pago?”</string>
+    <string name="learn_l2_q3_option_a">A) Nada, es solo una sugerencia</string>
+    <string name="learn_l2_q3_option_b">B) Se cobran intereses de mora</string>
+    <string name="learn_l3_q2_question">“¿Qué le pasa con los años a la plata que guardas bajo el colchón?”</string>
+    <string name="learn_l3_q2_option_a">A) Crece sola</string>
+    <string name="learn_l3_q2_option_b">B) Pierde valor por la inflación</string>
+    <string name="learn_l3_q3_question">“¿Qué significa que el interés sea compuesto?”</string>
+    <string name="learn_l3_q3_option_a">A) Ganas intereses también sobre los intereses ya acumulados</string>
+    <string name="learn_l3_q3_option_b">B) Solo ganas intereses sobre el capital inicial</string>
 </resources>

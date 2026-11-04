@@ -39,13 +39,15 @@ import com.finmojarra.app.ui.theme.FinWhite
 private enum class OptionState { Idle, Wrong, Right }
 
 /**
- * "Píldoras en un minuto": una píldora para leer (botón Aprender) y la pregunta interactiva.
- * Al elegir una opción se muestra "Respuesta correcta" (verde) o "Respuesta incorrecta"
- * (rojo); si te equivocas puedes intentar con otra opción, las veces que quieras.
+ * "Píldoras en un minuto": una píldora para leer (botón Aprender) y las 3 preguntas
+ * interactivas del nivel. Al elegir una opción se muestra "Respuesta correcta" (verde) o
+ * "Respuesta incorrecta" (rojo); si te equivocas puedes intentar con otra opción.
  *
- * Cuando la pregunta ya se respondió bien ([quizDone], dato guardado en Firebase) queda
- * bloqueada: se muestra la opción correcta en verde y no se puede volver a responder,
- * ni siquiera después de salir de la pantalla o cerrar la app. Sirve para todos los niveles.
+ * Cada intento se guarda en Firebase ([onAnswer]). Las preguntas ya acertadas
+ * ([correctQuestions], leídas de Firebase) quedan bloqueadas con la opción correcta en
+ * verde, aunque salgas de la pantalla o cierres la app. [quizDone] (quiz completo, también
+ * de Firebase) bloquea las tres; así los usuarios que ya habían terminado el quiz antiguo
+ * de una sola pregunta no lo pierden.
  */
 @Composable
 fun PillsScreen(
@@ -58,15 +60,16 @@ fun PillsScreen(
     onOpenGoals: () -> Unit,
     onLearn: () -> Unit,
     quizDone: Boolean,
-    onCorrectAnswer: () -> Unit
+    correctQuestions: Set<Int>,
+    onAnswer: (questionIndex: Int, correct: Boolean) -> Unit
 ) {
-    val quiz = level.quiz
-    // El estado se reinicia por nivel para que una respuesta de un nivel no pase a otro.
-    var selected by rememberSaveable(level.pathId) { mutableStateOf<Int?>(null) }
-    // Bloqueada si ya estaba guardada como correcta o si se acaba de acertar.
-    val answeredCorrectly = quizDone || selected == quiz.correctIndex
-    // Si ya estaba resuelta de antes, se muestra la opción correcta marcada.
-    val shownSelection = if (quizDone) quiz.correctIndex else selected
+    val questions = level.quiz
+    // Opción elegida en esta sesión por pregunta (-1 = ninguna). Se reinicia por nivel.
+    var selected by rememberSaveable(level.pathId) { mutableStateOf(IntArray(questions.size) { -1 }) }
+
+    val correctCount = questions.indices.count { i ->
+        quizDone || i in correctQuestions || selected[i] == questions[i].correctIndex
+    }
 
     LearnFrame(
         photoPath = photoPath,
@@ -79,27 +82,47 @@ fun PillsScreen(
         LearnSectionTitle(title = stringResource(R.string.learn_pills_title))
         PillTeaserCard(level = level, onLearn = onLearn)
 
-        QuizCard(
-            quiz = quiz,
-            selected = shownSelection,
-            locked = answeredCorrectly,
-            onSelect = { index ->
-                if (!answeredCorrectly) {
-                    selected = index
-                    if (index == quiz.correctIndex) onCorrectAnswer()
-                }
-            }
+        Text(
+            text = stringResource(R.string.learn_quiz_progress, correctCount, questions.size),
+            style = MaterialTheme.typography.bodySmall.copy(
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Bold
+            ),
+            color = FinTeal,
+            modifier = Modifier.padding(start = 8.dp)
         )
 
-        shownSelection?.let {
-            Text(
-                text = stringResource(
-                    if (answeredCorrectly) R.string.learn_quiz_correct else R.string.learn_quiz_incorrect
-                ),
-                style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium),
-                color = if (answeredCorrectly) FinSuccess else FinError,
-                modifier = Modifier.padding(start = 8.dp)
+        questions.forEachIndexed { index, quiz ->
+            // Bloqueada si ya estaba guardada como correcta o si se acaba de acertar.
+            val alreadyDone = quizDone || index in correctQuestions
+            val answeredCorrectly = alreadyDone || selected[index] == quiz.correctIndex
+            // Si ya estaba resuelta de antes, se muestra la opción correcta marcada.
+            val shownSelection = if (alreadyDone) quiz.correctIndex else selected[index].takeIf { it >= 0 }
+
+            QuizCard(
+                quiz = quiz,
+                number = index + 1,
+                total = questions.size,
+                selected = shownSelection,
+                locked = answeredCorrectly,
+                onSelect = { option ->
+                    if (!answeredCorrectly) {
+                        selected = selected.copyOf().also { it[index] = option }
+                        onAnswer(index, option == quiz.correctIndex)
+                    }
+                }
             )
+
+            shownSelection?.let {
+                Text(
+                    text = stringResource(
+                        if (answeredCorrectly) R.string.learn_quiz_correct else R.string.learn_quiz_incorrect
+                    ),
+                    style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium),
+                    color = if (answeredCorrectly) FinSuccess else FinError,
+                    modifier = Modifier.padding(start = 8.dp)
+                )
+            }
         }
     }
 }
@@ -138,6 +161,8 @@ private fun PillTeaserCard(level: LevelContent, onLearn: () -> Unit) {
 @Composable
 private fun QuizCard(
     quiz: QuizQuestion,
+    number: Int,
+    total: Int,
     selected: Int?,
     locked: Boolean,
     onSelect: (Int) -> Unit
@@ -154,7 +179,7 @@ private fun QuizCard(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = stringResource(R.string.learn_quiz_title),
+                text = stringResource(R.string.learn_quiz_counter, number, total),
                 style = MaterialTheme.typography.bodySmall.copy(
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Bold

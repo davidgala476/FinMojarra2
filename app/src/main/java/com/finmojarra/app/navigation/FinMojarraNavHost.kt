@@ -289,6 +289,7 @@ fun FinMojarraNavHost(
             val details by container.profileDetailsRepository.details.collectAsStateWithLifecycle()
             val progressViewModel = learnProgressViewModel(container)
             val steps by progressViewModel.steps.collectAsStateWithLifecycle()
+            val quizCorrect by progressViewModel.quizCorrect.collectAsStateWithLifecycle()
             PillsScreen(
                 level = level,
                 photoPath = details.photoPath,
@@ -299,7 +300,10 @@ fun FinMojarraNavHost(
                 onOpenGoals = { navController.goToTab(Routes.METAS) },
                 onLearn = { navController.navigate("${Routes.APRENDER_PILDORA}/${level.pathId}") },
                 quizDone = LearningSteps.QUIZ in steps[level.pathId].orEmpty(),
-                onCorrectAnswer = { progressViewModel.complete(level.pathId, LearningSteps.QUIZ) }
+                correctQuestions = quizCorrect[level.pathId].orEmpty(),
+                onAnswer = { index, correct ->
+                    progressViewModel.answerQuiz(level.pathId, index, correct, level.quiz.size)
+                }
             )
         }
 

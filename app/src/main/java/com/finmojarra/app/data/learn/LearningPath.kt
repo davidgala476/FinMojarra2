@@ -85,6 +85,9 @@ object LearningSteps {
     const val PILL = "pill"
     private val ALL = setOf(VIDEO, QUIZ, PILL)
 
+    /** Cuántos pasos tiene un nivel (video, píldora y quiz completo). */
+    val TOTAL: Int = ALL.size
+
     /** Cuántos de los pasos de un nivel aparecen en [steps]. */
     fun count(steps: Set<String>): Int = steps.count { it in ALL }
 }
