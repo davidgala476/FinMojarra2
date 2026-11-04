@@ -3,6 +3,7 @@ package com.finmojarra.app.navigation
 import android.net.Uri
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.initializer
@@ -30,6 +31,7 @@ import com.finmojarra.app.ui.account.AccountViewModel
 import com.finmojarra.app.ui.goals.GoalsScreen
 import com.finmojarra.app.ui.goals.GoalsViewModel
 import com.finmojarra.app.ui.home.HomeScreen
+import com.finmojarra.app.data.learn.LearningLevel
 import com.finmojarra.app.data.learn.LearningLevels
 import com.finmojarra.app.data.learn.LearningSteps
 import com.finmojarra.app.ui.learn.LearnProgressViewModel
@@ -176,9 +178,14 @@ fun FinMojarraNavHost(
                 }
             )
             val details by container.profileDetailsRepository.details.collectAsStateWithLifecycle()
+            val progressViewModel = learnProgressViewModel(container)
+            val learnSteps by progressViewModel.steps.collectAsStateWithLifecycle()
+            val learnQuiz by progressViewModel.quizCorrect.collectAsStateWithLifecycle()
+            val learnLevel = remember(learnSteps, learnQuiz) { LearningLevel.from(learnSteps, learnQuiz) }
             HomeScreen(
                 viewModel = viewModel,
                 accountViewModel = accountViewModel,
+                learnLevel = learnLevel,
                 photoPath = details.photoPath,
                 photoStamp = details.photoStamp,
                 onOpenProfile = { navController.navigate(Routes.PERFIL) },

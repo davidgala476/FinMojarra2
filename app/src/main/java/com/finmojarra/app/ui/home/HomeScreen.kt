@@ -46,6 +46,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.finmojarra.app.R
 import com.finmojarra.app.data.account.MovementType
 import com.finmojarra.app.data.goals.Goal
+import com.finmojarra.app.data.learn.LearningLevel
 import com.finmojarra.app.ui.account.AccountCard
 import com.finmojarra.app.ui.account.AccountMessageDialog
 import com.finmojarra.app.ui.account.AccountViewModel
@@ -108,6 +109,7 @@ private data class SavingsSummary(
 fun HomeScreen(
     viewModel: GoalsViewModel,
     accountViewModel: AccountViewModel,
+    learnLevel: LearningLevel,
     photoPath: String,
     photoStamp: Long,
     onOpenProfile: () -> Unit,
@@ -142,6 +144,8 @@ fun HomeScreen(
                 .padding(horizontal = 24.dp, vertical = 20.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+            LearningLevelCard(level = learnLevel, onClick = onOpenLearn)
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly

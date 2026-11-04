@@ -255,6 +255,13 @@
     <string name="home_chart_more">Se muestran %1$d de %2$d metas</string>
     <string name="home_chart_empty">Cuando crees una meta, aquí verás cómo va tu progreso.</string>
 
+    <!-- Inicio: nivel de aprendizaje -->
+    <string name="learn_level_start">Mojarra Aprendiz</string>
+    <string name="home_level_title">Nivel de aprendizaje %1$d de %2$d</string>
+    <string name="home_level_steps">%1$d de %2$d pasos hechos</string>
+    <string name="home_level_next">Siguiente: %1$s</string>
+    <string name="home_level_max">¡Completaste todos los niveles!</string>
+
     <!-- Vamos a aprender -->
     <string name="learn_path_credit_title">Tarjeta de crédito sin miedo</string>
     <string name="learn_path_credit_badge">Mojarra Junior</string>
