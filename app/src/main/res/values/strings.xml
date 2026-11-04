@@ -354,4 +354,22 @@
     <string name="learn_l3_q3_question">“¿Qué significa que el interés sea compuesto?”</string>
     <string name="learn_l3_q3_option_a">A) Ganas intereses también sobre los intereses ya acumulados</string>
     <string name="learn_l3_q3_option_b">B) Solo ganas intereses sobre el capital inicial</string>
+    <!-- Ahorros: cuenta con ingresar y retirar -->
+    <string name="home_goals_money_title">Ahorrado en tus metas</string>
+    <string name="account_title">Tu dinero</string>
+    <string name="account_hint">Saldo de tu cuenta de ahorros</string>
+    <string name="account_deposit">Ingresar</string>
+    <string name="account_withdraw">Retirar</string>
+    <string name="account_deposit_title">¿Cuánto quieres ingresar?</string>
+    <string name="account_withdraw_title">¿Cuánto quieres retirar?</string>
+    <string name="account_available">Disponible: %1$s</string>
+    <string name="account_msg_nothing">Tu cuenta no tiene dinero para retirar</string>
+    <string name="account_msg_exceeds">No puedes retirar %1$s porque tu saldo es %2$s</string>
+    <string name="account_err_permission">No tienes permiso para guardar movimientos. Revisa las reglas de Firestore.</string>
+    <string name="movements_title">Movimientos recientes</string>
+    <string name="movements_empty">Aún no tienes movimientos. Ingresa dinero para empezar.</string>
+    <string name="movements_more">Se muestran los %1$d movimientos más recientes</string>
+    <string name="movement_deposit">Ingreso</string>
+    <string name="movement_withdraw">Retiro</string>
+    <string name="movement_just_now">Justo ahora</string>
 </resources>

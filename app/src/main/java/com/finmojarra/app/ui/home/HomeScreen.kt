@@ -44,7 +44,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.finmojarra.app.R
+import com.finmojarra.app.data.account.MovementType
 import com.finmojarra.app.data.goals.Goal
+import com.finmojarra.app.ui.account.AccountCard
+import com.finmojarra.app.ui.account.AccountMessageDialog
+import com.finmojarra.app.ui.account.AccountViewModel
+import com.finmojarra.app.ui.account.MoveMoneyDialog
+import com.finmojarra.app.ui.account.MovementsCard
 import com.finmojarra.app.ui.components.FinLinkText
 import com.finmojarra.app.ui.goals.GoalsScaffold
 import com.finmojarra.app.ui.goals.GoalsTab
@@ -94,12 +100,14 @@ private data class SavingsSummary(
 }
 
 /**
- * Inicio (pestaña "Ahorros"): cuánto dinero tienes ahorrado en tus metas, accesos a los
- * módulos (metas, nueva meta, perfil) y estadísticas de tus metas.
+ * Inicio (pestaña "Ahorros"): el saldo de tu cuenta con Ingresar / Retirar y sus movimientos,
+ * cuánto llevas ahorrado en tus metas, accesos a los módulos (metas, nueva meta, perfil)
+ * y estadísticas de tus metas.
  */
 @Composable
 fun HomeScreen(
     viewModel: GoalsViewModel,
+    accountViewModel: AccountViewModel,
     photoPath: String,
     photoStamp: Long,
     onOpenProfile: () -> Unit,
@@ -108,13 +116,15 @@ fun HomeScreen(
     onCreateGoal: () -> Unit
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val account by accountViewModel.uiState.collectAsStateWithLifecycle()
     val summary = remember(state.goals) { SavingsSummary.from(state.goals) }
 
     GoalsScaffold(
         onBack = null,
         onOpenProfile = onOpenProfile,
         photoPath = photoPath,
-        photoStamp = photoStamp
+        photoStamp = photoStamp,
+        isLoading = account.isWorking
     ) {
         Spacer(modifier = Modifier.height(12.dp))
         GoalsTabs(
@@ -141,7 +151,16 @@ fun HomeScreen(
                 Shortcut(R.drawable.ic_person, stringResource(R.string.home_shortcut_profile), onOpenProfile)
             }
 
-            MoneyCard(summary = summary, hasGoals = state.goals.isNotEmpty(), isLoading = state.isLoading)
+            AccountCard(
+                state = account,
+                onDeposit = { accountViewModel.openDialog(MovementType.Deposit) },
+                onWithdraw = { accountViewModel.openDialog(MovementType.Withdraw) },
+                onRetry = accountViewModel::retry
+            )
+
+            MovementsCard(state = account)
+
+            GoalsMoneyCard(summary = summary, hasGoals = state.goals.isNotEmpty(), isLoading = state.isLoading)
 
             Box(
                 modifier = Modifier
@@ -168,6 +187,13 @@ fun HomeScreen(
             )
         }
     }
+    MoveMoneyDialog(
+        state = account,
+        onAmountChange = accountViewModel::onAmountChange,
+        onConfirm = accountViewModel::confirm,
+        onDismiss = accountViewModel::closeDialog
+    )
+    AccountMessageDialog(state = account, onDismiss = accountViewModel::dismissMessage)
 }
 
 @Composable
@@ -204,7 +230,7 @@ private fun Shortcut(@DrawableRes icon: Int, label: String, onClick: () -> Unit)
 }
 
 @Composable
-private fun HomeCard(modifier: Modifier = Modifier, content: @Composable () -> Unit) {
+internal fun HomeCard(modifier: Modifier = Modifier, content: @Composable () -> Unit) {
     val shape = RoundedCornerShape(12.dp)
     Column(
         modifier = modifier
@@ -216,12 +242,12 @@ private fun HomeCard(modifier: Modifier = Modifier, content: @Composable () -> U
     ) { content() }
 }
 
-/** "Tu dinero ahorrado": suma de lo ahorrado en todas las metas. */
+/** "Ahorrado en tus metas": suma de lo ahorrado en todas las metas. */
 @Composable
-private fun MoneyCard(summary: SavingsSummary, hasGoals: Boolean, isLoading: Boolean) {
+private fun GoalsMoneyCard(summary: SavingsSummary, hasGoals: Boolean, isLoading: Boolean) {
     HomeCard {
         Text(
-            text = stringResource(R.string.home_money_title),
+            text = stringResource(R.string.home_goals_money_title),
             style = MaterialTheme.typography.bodySmall,
             color = FinMutedText
         )

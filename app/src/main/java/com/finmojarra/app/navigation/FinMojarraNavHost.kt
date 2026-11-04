@@ -26,6 +26,7 @@ import com.finmojarra.app.ui.goals.CreateGoalScreen
 import com.finmojarra.app.ui.goals.CreateGoalViewModel
 import com.finmojarra.app.ui.goals.GoalDetailScreen
 import com.finmojarra.app.ui.goals.GoalDetailViewModel
+import com.finmojarra.app.ui.account.AccountViewModel
 import com.finmojarra.app.ui.goals.GoalsScreen
 import com.finmojarra.app.ui.goals.GoalsViewModel
 import com.finmojarra.app.ui.home.HomeScreen
@@ -164,6 +165,11 @@ fun FinMojarraNavHost(
         }
 
         composable(Routes.HOME) {
+            val accountViewModel: AccountViewModel = viewModel(
+                factory = viewModelFactory {
+                    initializer { AccountViewModel(container.accountRepository) }
+                }
+            )
             val viewModel: GoalsViewModel = viewModel(
                 factory = viewModelFactory {
                     initializer { GoalsViewModel(container.goalsRepository) }
@@ -172,6 +178,7 @@ fun FinMojarraNavHost(
             val details by container.profileDetailsRepository.details.collectAsStateWithLifecycle()
             HomeScreen(
                 viewModel = viewModel,
+                accountViewModel = accountViewModel,
                 photoPath = details.photoPath,
                 photoStamp = details.photoStamp,
                 onOpenProfile = { navController.navigate(Routes.PERFIL) },

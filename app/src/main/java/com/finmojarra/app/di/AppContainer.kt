@@ -1,6 +1,8 @@
 package com.finmojarra.app.di
 
 import android.content.Context
+import com.finmojarra.app.data.account.AccountRepository
+import com.finmojarra.app.data.account.FirestoreAccountRepository
 import com.finmojarra.app.data.auth.AuthRepository
 import com.finmojarra.app.data.auth.FirebaseAuthRepository
 import com.finmojarra.app.data.auth.GoogleTokenProvider
@@ -29,5 +31,6 @@ class AppContainer(context: Context) {
     val profileRepository: ProfileRepository = FirebaseProfileRepository()
     val profileDetailsRepository: ProfileDetailsRepository = FirestoreProfileDetailsRepository(context)
     val goalsRepository: GoalsRepository = FirestoreGoalsRepository(context)
+    val accountRepository: AccountRepository = FirestoreAccountRepository()
     val learningProgressRepository: LearningProgressRepository = FirestoreLearningProgressRepository()
 }
