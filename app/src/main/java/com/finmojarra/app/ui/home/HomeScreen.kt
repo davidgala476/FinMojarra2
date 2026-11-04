@@ -44,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.finmojarra.app.R
+import com.finmojarra.app.data.account.AccountSummaries
 import com.finmojarra.app.data.account.MovementType
 import com.finmojarra.app.data.goals.Goal
 import com.finmojarra.app.data.learn.LearningLevel
@@ -51,7 +52,9 @@ import com.finmojarra.app.ui.account.AccountCard
 import com.finmojarra.app.ui.account.AccountMessageDialog
 import com.finmojarra.app.ui.account.AccountViewModel
 import com.finmojarra.app.ui.account.MoveMoneyDialog
+import com.finmojarra.app.ui.account.MonthSummaryCard
 import com.finmojarra.app.ui.account.MovementsCard
+import com.finmojarra.app.ui.account.WeeklySavingsCard
 import com.finmojarra.app.ui.components.FinLinkText
 import com.finmojarra.app.ui.goals.GoalsScaffold
 import com.finmojarra.app.ui.goals.GoalsTab
@@ -120,6 +123,8 @@ fun HomeScreen(
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val account by accountViewModel.uiState.collectAsStateWithLifecycle()
     val summary = remember(state.goals) { SavingsSummary.from(state.goals) }
+    val weekly = remember(account.movements, state.goals) { AccountSummaries.week(account.movements, state.goals) }
+    val month = remember(account.movements) { AccountSummaries.month(account.movements) }
 
     GoalsScaffold(
         onBack = null,
@@ -163,6 +168,10 @@ fun HomeScreen(
             )
 
             GoalsMoneyCard(summary = summary, hasGoals = state.goals.isNotEmpty(), isLoading = state.isLoading)
+
+            WeeklySavingsCard(weekly = weekly, isLoading = account.isLoading || state.isLoading)
+
+            MonthSummaryCard(summary = month, isLoading = account.isLoading)
 
             MovementsCard(state = account)
 

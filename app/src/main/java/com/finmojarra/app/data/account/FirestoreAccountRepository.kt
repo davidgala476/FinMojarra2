@@ -197,7 +197,7 @@ class FirestoreAccountRepository(
         const val SUMMARY = "summary"
         const val MOVEMENTS = "movements"
         const val GOALS = "goals"
-        const val MAX_MOVEMENTS = 30L
+        const val MAX_MOVEMENTS = 500L
         const val WRITE_TIMEOUT_MS = 4_000L
     }
 }

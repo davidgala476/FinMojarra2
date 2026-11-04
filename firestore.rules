@@ -1,0 +1,33 @@
+rules_version = '2';
+
+// Reglas de Firestore de FinMojarra.
+// Pégalas en Firebase Console > Firestore Database > Reglas y pulsa "Publicar".
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isOwner(userId) {
+      return request.auth != null && request.auth.uid == userId;
+    }
+
+    // El documento del usuario (perfil, etc.).
+    match /users/{userId} {
+      allow read, write: if isOwner(userId);
+    }
+
+    // La cuenta de ahorros: el saldo nunca puede quedar negativo.
+    // request.resource.data.balance es el saldo DESPUÉS de aplicar el increment() de la app;
+    // si un retiro o un ingreso a una meta dejaría el saldo por debajo de 0, el servidor
+    // rechaza todo el lote (saldo, meta y movimiento).
+    match /users/{userId}/account/{docId} {
+      allow read: if isOwner(userId);
+      allow create, update: if isOwner(userId)
+        && request.resource.data.balance is number
+        && request.resource.data.balance >= 0;
+    }
+
+    // Todo lo demás del usuario (metas, movimientos, aprendizaje...), menos la cuenta de arriba.
+    match /users/{userId}/{collection}/{path=**} {
+      allow read, write: if isOwner(userId) && collection != 'account';
+    }
+  }
+}

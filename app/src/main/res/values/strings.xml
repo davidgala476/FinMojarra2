@@ -378,6 +378,15 @@
     <string name="movements_more">Se muestran los %1$d movimientos más recientes</string>
     <string name="movement_deposit">Ingreso</string>
     <string name="movement_withdraw">Retiro</string>
+    <string name="home_week_title">Ahorro de esta semana en metas</string>
+    <string name="home_week_goal">Tu meta semanal: %1$s</string>
+    <string name="home_week_missing">Te faltan %1$s para cumplirla</string>
+    <string name="home_week_done">¡Cumpliste tu ahorro semanal!</string>
+    <string name="home_week_empty">Cuando tengas una meta activa, aquí verás cuánto debes ahorrar cada semana.</string>
+    <string name="home_month_title">Resumen de %1$s</string>
+    <string name="home_month_deposits">Ingresaste a tu cuenta</string>
+    <string name="home_month_withdrawals">Retiraste de tu cuenta</string>
+    <string name="home_month_goals">Enviado a tus metas</string>
     <string name="movement_just_now">Justo ahora</string>
     <string name="movement_to_goal">A la meta: %1$s</string>
     <string name="movement_from_goal">Desde la meta: %1$s</string>
