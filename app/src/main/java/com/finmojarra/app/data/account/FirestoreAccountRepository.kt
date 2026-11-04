@@ -18,12 +18,7 @@ import kotlin.coroutines.cancellation.CancellationException
 
 /**
  * Cuenta de ahorros guardada en Firestore:
- *
- *  - users/{uid}/account/summary          →  balance (número: el saldo actual), updatedAt
- *  - users/{uid}/movements/{movementId}   →  type ("deposit", "withdraw", "goal_deposit" o
- *                                            "goal_withdraw"), amount (número, siempre positivo),
- *                                            goalName (solo en los de metas) y createdAt
- *
+
  * Cada ingreso o retiro es UNA escritura en lote (batch): suma o resta al saldo con increment()
  * y agrega el movimiento. O se guardan las dos cosas o ninguna, así el saldo y el historial
  * nunca quedan desfasados. increment() suma en el servidor, así que dos dispositivos no se
@@ -120,7 +115,7 @@ class FirestoreAccountRepository(
     }
 
     /**
-     * Agrega al lote el cambio del saldo (según el tipo) y el movimiento del historial.
+     * Agrega a firebase el cambio del saldo y el movimiento del historial.
      * Los ingresos y los retiros de metas suman o restan con increment() en el servidor.
      */
     private fun addMovement(
