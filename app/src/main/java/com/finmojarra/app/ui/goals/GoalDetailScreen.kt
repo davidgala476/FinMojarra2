@@ -125,6 +125,13 @@ fun GoalDetailScreen(
     if (state.dialogOpen && goal != null) {
         FinDialog(title = stringResource(R.string.goals_move_title), onDismiss = viewModel::closeDialog) {
             GoalProgress(saved = goal.savedAmount, progress = goal.progress)
+            state.accountBalance?.let {
+                Text(
+                    text = stringResource(R.string.goals_account_available, formatMoney(it)),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = FinMutedText
+                )
+            }
             FinTextField(
                 value = state.amount,
                 onValueChange = viewModel::onAmountChange,

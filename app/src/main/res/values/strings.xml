@@ -362,7 +362,7 @@
     <string name="learn_l3_q3_option_a">A) Ganas intereses también sobre los intereses ya acumulados</string>
     <string name="learn_l3_q3_option_b">B) Solo ganas intereses sobre el capital inicial</string>
     <!-- Ahorros: cuenta con ingresar y retirar -->
-    <string name="home_goals_money_title">Ahorrado en tus metas</string>
+    <string name="home_goals_money_title">Dinero en tus metas</string>
     <string name="account_title">Tu dinero</string>
     <string name="account_hint">Saldo de tu cuenta de ahorros</string>
     <string name="account_deposit">Ingresar</string>
@@ -379,4 +379,11 @@
     <string name="movement_deposit">Ingreso</string>
     <string name="movement_withdraw">Retiro</string>
     <string name="movement_just_now">Justo ahora</string>
+    <string name="movement_to_goal">A la meta: %1$s</string>
+    <string name="movement_from_goal">Desde la meta: %1$s</string>
+    <string name="movement_goal_fallback">tu meta</string>
+    <string name="goals_msg_no_account_money">Deposita dinero para empezar tu meta. Tu cuenta de ahorros está en $0.</string>
+    <string name="goals_msg_account_exceeds">No puedes ingresar %1$s a la meta porque en tu cuenta solo tienes %2$s. Cambia el valor o deposita más dinero en tu cuenta.</string>
+    <string name="goals_msg_account_loading">Estamos cargando el saldo de tu cuenta. Intenta de nuevo en unos segundos.</string>
+    <string name="goals_account_available">Disponible en tu cuenta: %1$s</string>
 </resources>

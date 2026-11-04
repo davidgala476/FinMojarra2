@@ -9,6 +9,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.SetOptions
+import com.google.firebase.firestore.WriteBatch
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -19,8 +20,9 @@ import kotlin.coroutines.cancellation.CancellationException
  * Cuenta de ahorros guardada en Firestore:
  *
  *  - users/{uid}/account/summary          →  balance (número: el saldo actual), updatedAt
- *  - users/{uid}/movements/{movementId}   →  type ("deposit" o "withdraw"), amount (número, siempre
- *                                            positivo) y createdAt (fecha del servidor)
+ *  - users/{uid}/movements/{movementId}   →  type ("deposit", "withdraw", "goal_deposit" o
+ *                                            "goal_withdraw"), amount (número, siempre positivo),
+ *                                            goalName (solo en los de metas) y createdAt
  *
  * Cada ingreso o retiro es UNA escritura en lote (batch): suma o resta al saldo con increment()
  * y agrega el movimiento. O se guardan las dos cosas o ninguna, así el saldo y el historial
@@ -83,8 +85,52 @@ class FirestoreAccountRepository(
         val uid = auth.currentUser?.uid
             ?: return AccountWriteResult.Failure(AccountWriteResult.Reason.NoSession)
 
-        val signed = if (type == MovementType.Deposit) amount else -amount
         val batch = db.batch()
+        addMovement(batch, uid, type, amount, goalName = null)
+        return write { batch.commit().awaitResult() }
+    }
+
+    override suspend fun transferToGoal(goalId: String, goalName: String, delta: Double): AccountWriteResult {
+        val uid = auth.currentUser?.uid
+            ?: return AccountWriteResult.Failure(AccountWriteResult.Reason.NoSession)
+
+        val batch = db.batch()
+        // Sube (o baja) lo ahorrado en la meta...
+        batch.update(goalDoc(uid, goalId), "savedAmount", FieldValue.increment(delta))
+        // ...y en la misma escritura baja (o sube) el saldo de la cuenta y deja el movimiento.
+        val type = if (delta > 0) MovementType.GoalDeposit else MovementType.GoalWithdraw
+        addMovement(batch, uid, type, kotlin.math.abs(delta), goalName)
+        return write { batch.commit().awaitResult() }
+    }
+
+    override suspend fun deleteGoalReturningMoney(
+        goalId: String,
+        goalName: String,
+        savedAmount: Double
+    ): AccountWriteResult {
+        val uid = auth.currentUser?.uid
+            ?: return AccountWriteResult.Failure(AccountWriteResult.Reason.NoSession)
+
+        val batch = db.batch()
+        batch.delete(goalDoc(uid, goalId))
+        if (savedAmount > 0.0) {
+            addMovement(batch, uid, MovementType.GoalWithdraw, savedAmount, goalName)
+        }
+        return write { batch.commit().awaitResult() }
+    }
+
+    /**
+     * Agrega al lote el cambio del saldo (según el tipo) y el movimiento del historial.
+     * Los ingresos y los retiros de metas suman o restan con increment() en el servidor.
+     */
+    private fun addMovement(
+        batch: WriteBatch,
+        uid: String,
+        type: MovementType,
+        amount: Double,
+        goalName: String?
+    ) {
+        val signed = if (type.addsToBalance) amount else -amount
         batch.set(
             summaryDoc(uid),
             mapOf(
@@ -93,15 +139,13 @@ class FirestoreAccountRepository(
             ),
             SetOptions.merge()
         )
-        batch.set(
-            movementsCollection(uid).document(),
-            mapOf(
-                "type" to type.key,
-                "amount" to amount,
-                "createdAt" to FieldValue.serverTimestamp()
-            )
+        val data = mutableMapOf<String, Any>(
+            "type" to type.key,
+            "amount" to amount,
+            "createdAt" to FieldValue.serverTimestamp()
         )
-        return write { batch.commit().awaitResult() }
+        if (goalName != null) data["goalName"] = goalName
+        batch.set(movementsCollection(uid).document(), data)
     }
 
     /**
@@ -125,6 +169,9 @@ class FirestoreAccountRepository(
     private fun summaryDoc(uid: String) =
         db.collection(USERS).document(uid).collection(ACCOUNT).document(SUMMARY)
 
+    private fun goalDoc(uid: String, goalId: String) =
+        db.collection(USERS).document(uid).collection(GOALS).document(goalId)
+
     private fun movementsCollection(uid: String) =
         db.collection(USERS).document(uid).collection(MOVEMENTS)
 
@@ -135,6 +182,7 @@ class FirestoreAccountRepository(
             id = id,
             type = type,
             amount = amount,
+            goalName = getString("goalName"),
             createdAtMillis = getTimestamp(
                 "createdAt",
                 DocumentSnapshot.ServerTimestampBehavior.ESTIMATE
@@ -148,6 +196,7 @@ class FirestoreAccountRepository(
         const val ACCOUNT = "account"
         const val SUMMARY = "summary"
         const val MOVEMENTS = "movements"
+        const val GOALS = "goals"
         const val MAX_MOVEMENTS = 30L
         const val WRITE_TIMEOUT_MS = 4_000L
     }

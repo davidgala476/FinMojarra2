@@ -162,9 +162,9 @@ fun HomeScreen(
                 onRetry = accountViewModel::retry
             )
 
-            MovementsCard(state = account)
-
             GoalsMoneyCard(summary = summary, hasGoals = state.goals.isNotEmpty(), isLoading = state.isLoading)
+
+            MovementsCard(state = account)
 
             Box(
                 modifier = Modifier

@@ -207,8 +207,16 @@ fun MovementsCard(state: AccountUiState) {
 
 @Composable
 private fun MovementRow(movement: Movement, dateFormat: SimpleDateFormat) {
-    val isDeposit = movement.type == MovementType.Deposit
+    val isDeposit = movement.type.addsToBalance
     val color = if (isDeposit) FinTeal else FinError
+    val label = when (movement.type) {
+        MovementType.Deposit -> stringResource(R.string.movement_deposit)
+        MovementType.Withdraw -> stringResource(R.string.movement_withdraw)
+        MovementType.GoalDeposit ->
+            stringResource(R.string.movement_to_goal, movement.goalName ?: stringResource(R.string.movement_goal_fallback))
+        MovementType.GoalWithdraw ->
+            stringResource(R.string.movement_from_goal, movement.goalName ?: stringResource(R.string.movement_goal_fallback))
+    }
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -233,7 +241,7 @@ private fun MovementRow(movement: Movement, dateFormat: SimpleDateFormat) {
                 .padding(horizontal = 10.dp)
         ) {
             Text(
-                text = stringResource(if (isDeposit) R.string.movement_deposit else R.string.movement_withdraw),
+                text = label,
                 style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Medium),
                 color = FinInk
             )

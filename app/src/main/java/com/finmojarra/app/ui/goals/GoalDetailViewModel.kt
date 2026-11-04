@@ -4,6 +4,9 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.finmojarra.app.R
+import com.finmojarra.app.data.account.AccountRepository
+import com.finmojarra.app.data.account.AccountResult
+import com.finmojarra.app.data.account.AccountWriteResult
 import com.finmojarra.app.data.goals.Goal
 import com.finmojarra.app.data.goals.GoalWriteResult
 import com.finmojarra.app.data.goals.GoalsRepository
@@ -21,6 +24,8 @@ data class GoalDetailUiState(
     val isLoading: Boolean = true,
     val hasError: Boolean = false,
     val goal: Goal? = null,
+    /** Saldo de la cuenta de ahorros; null mientras carga. De ahí sale el dinero que se ingresa a la meta. */
+    val accountBalance: Double? = null,
     /** Posición de la meta en la lista ("Meta 2"). */
     val number: Int = 0,
     val dialogOpen: Boolean = false,
@@ -38,6 +43,7 @@ data class GoalDetailUiState(
 /** Detalle de una meta e ingreso / retiro de dinero. */
 class GoalDetailViewModel(
     private val repository: GoalsRepository,
+    private val accountRepository: AccountRepository,
     private val goalId: String
 ) : ViewModel() {
 
@@ -45,6 +51,7 @@ class GoalDetailViewModel(
     val uiState: StateFlow<GoalDetailUiState> = _uiState.asStateFlow()
 
     init {
+        observeAccount()
         viewModelScope.launch {
             repository.observeGoals().collect { result ->
                 _uiState.update { state ->
@@ -60,6 +67,16 @@ class GoalDetailViewModel(
                         }
                         GoalsResult.Failure -> state.copy(isLoading = false, hasError = true)
                     }
+                }
+            }
+        }
+    }
+
+    private fun observeAccount() {
+        viewModelScope.launch {
+            accountRepository.observeAccount().collect { result ->
+                if (result is AccountResult.Success) {
+                    _uiState.update { it.copy(accountBalance = result.balance) }
                 }
             }
         }
@@ -97,11 +114,13 @@ class GoalDetailViewModel(
         // "meta no encontrada" cuando Firestore quita la meta de la lista local.
         _uiState.update { it.copy(confirmDelete = false, isWorking = true) }
         viewModelScope.launch {
-            val result = repository.deleteGoal(goalId)
+            // Lo ahorrado en la meta vuelve a la cuenta al borrarla.
+            val goal = s.goal
+            val result = accountRepository.deleteGoalReturningMoney(goalId, goal.name, goal.savedAmount)
             _uiState.update {
                 when (result) {
-                    GoalWriteResult.Success -> it.copy(isWorking = false, deleted = true)
-                    is GoalWriteResult.Failure ->
+                    AccountWriteResult.Success -> it.copy(isWorking = false, deleted = true)
+                    is AccountWriteResult.Failure ->
                         it.copy(isWorking = false, message = GoalMessage(result.reason.messageRes()))
                 }
             }
@@ -126,6 +145,18 @@ class GoalDetailViewModel(
             showMessage(GoalMessage(R.string.goals_msg_nothing_saved))
             return
         }
+        // Solo se puede ingresar dinero que ya está en la cuenta de ahorros.
+        val balance = s.accountBalance
+        if (sign > 0) {
+            if (balance == null) {
+                showMessage(GoalMessage(R.string.goals_msg_account_loading))
+                return
+            }
+            if (balance <= 0.0) {
+                showMessage(GoalMessage(R.string.goals_msg_no_account_money))
+                return
+            }
+        }
 
         val value = s.amount.toLongOrNull() ?: 0L
         val inlineError = when {
@@ -144,6 +175,15 @@ class GoalDetailViewModel(
             )
             return
         }
+        if (sign > 0 && balance != null && value > balance) {
+            showMessage(
+                GoalMessage(
+                    R.string.goals_msg_account_exceeds,
+                    listOf(formatMoney(value.toDouble()), formatMoney(balance))
+                )
+            )
+            return
+        }
         if (sign < 0 && value > goal.savedAmount) {
             showMessage(
                 GoalMessage(
@@ -156,12 +196,13 @@ class GoalDetailViewModel(
 
         _uiState.update { it.copy(isWorking = true) }
         viewModelScope.launch {
-            val result = repository.addToSaved(goalId, sign * value.toDouble())
+            // Un solo paso: sube/baja la meta y baja/sube el saldo de la cuenta.
+            val result = accountRepository.transferToGoal(goalId, goal.name, sign * value.toDouble())
             _uiState.update {
                 when (result) {
-                    GoalWriteResult.Success ->
+                    AccountWriteResult.Success ->
                         it.copy(isWorking = false, dialogOpen = false, amount = "")
-                    is GoalWriteResult.Failure ->
+                    is AccountWriteResult.Failure ->
                         it.copy(isWorking = false, message = GoalMessage(result.reason.messageRes()))
                 }
             }
@@ -170,6 +211,12 @@ class GoalDetailViewModel(
 
     private fun showMessage(message: GoalMessage) {
         _uiState.update { it.copy(message = message) }
+    }
+
+    private fun AccountWriteResult.Reason.messageRes(): Int = when (this) {
+        AccountWriteResult.Reason.PermissionDenied -> R.string.account_err_permission
+        AccountWriteResult.Reason.NoSession -> R.string.profile_err_no_session
+        AccountWriteResult.Reason.Unknown -> R.string.error_server_body
     }
 
     private companion object {

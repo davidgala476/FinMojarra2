@@ -222,7 +222,7 @@ fun FinMojarraNavHost(
             val goalId = backStackEntry.arguments?.getString("goalId").orEmpty()
             val viewModel: GoalDetailViewModel = viewModel(
                 factory = viewModelFactory {
-                    initializer { GoalDetailViewModel(container.goalsRepository, goalId) }
+                    initializer { GoalDetailViewModel(container.goalsRepository, container.accountRepository, goalId) }
                 }
             )
             val details by container.profileDetailsRepository.details.collectAsStateWithLifecycle()
